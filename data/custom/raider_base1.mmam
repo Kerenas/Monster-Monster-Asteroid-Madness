@@ -1,0 +1,28 @@
+###### Raider Base I ######
+# author : Eric Killeen
+# date : 18Jan2005
+
+mon.new Raider Camp; ast.spawnmon
+mon.pushpos
+	mon.new Raider Gun Tower; mon.pos -120  -20; ast.addmonr;
+	mon.new Raider Gun Tower; mon.pos  120  -20; ast.addmonr;
+	mon.new Raider Gun Tower; mon.pos    0 -120; ast.addmonr;
+	mon.new Raider Gun Tower; mon.pos  -60  120; ast.addmonr;
+	mon.new Raider Gun Tower; mon.pos   60  120; ast.addmonr;
+poppos
+*7 mon.new Raidship; ast.spawnmon
+*21 mon.new Raider; ast.spawnmon
+mon.new Raider Fission Plant; ast.spawnmon
+
+
+# Raidship
+# Raider
+# Raider Gun Tower
+# Raider DG Tower
+# Raider X-Cannon Tower
+# Raider Galtix Tower
+# Raider Solar Array
+# Raider Fission Plant
+# Raider Fusion Plant
+
+

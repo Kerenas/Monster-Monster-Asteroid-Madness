@@ -1,0 +1,24 @@
+###### Raider Base IV ######
+# author : Eric Killeen
+# date : 18Jan2005
+
+mon.new Raider Camp; ast.spawnmon
+mon.pushpos
+	*19 mon.new Raider; ast.addmonby
+poppos
+*36 mon.new Raidship; ast.spawnmon
+*22 mon.new Raider; ast.spawnmon
+*5 mon.new Raider Solar Array; ast.spawnmon
+*2 mon.new Raider Gun Tower; ast.spawnmon
+
+# Raidship
+# Raider
+# Raider Gun Tower
+# Raider DG Tower
+# Raider X-Cannon Tower
+# Raider Galtix Tower
+# Raider Solar Array
+# Raider Fission Plant
+# Raider Fusion Plant
+
+

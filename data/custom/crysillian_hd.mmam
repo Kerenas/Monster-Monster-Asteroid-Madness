@@ -1,0 +1,38 @@
+###### HD Crysillian Asteroid ######
+# author : Eric Killeen
+# date : 17Nov2004
+
+mon.new Ruins; mon.pos 300 200; ast.addmon
+mon.pushpos
+*4 mon.new Crysillian; ast.addmonby
+poppos
+
+mon.new Ruins; mon.pos 450 200; ast.addmon
+mon.pushpos
+*4 mon.new Crysillian; ast.addmonby
+poppos
+
+mon.new Ruins; mon.pos 250 350; ast.addmon
+mon.pushpos
+*4 mon.new Crysillian; ast.addmonby
+poppos
+
+mon.new Deathray; mon.pos 375 350; ast.addmon
+
+mon.new Ruins; mon.pos 500 350; ast.addmon
+mon.pushpos
+*4 mon.new Crysillian; ast.addmonby
+poppos
+
+mon.new Ruins; mon.pos 300 500; ast.addmon
+mon.pushpos
+*4 mon.new Crysillian; ast.addmonby
+poppos
+
+mon.new Ruins; mon.pos 450 500; ast.addmon
+mon.pushpos
+*4 mon.new Crysillian; ast.addmonby
+poppos
+
+include _basic.mmam
+

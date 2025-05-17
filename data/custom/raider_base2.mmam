@@ -1,0 +1,32 @@
+###### Raider Base II ######
+# author : Eric Killeen
+# date : 18Jan2005
+
+mon.new Raider Camp; ast.spawnmon
+mon.pushpos
+	mon.new Raider DG Tower; mon.pos -90  -30; ast.addmonr;
+	mon.new Raider DG Tower; mon.pos -90   30; ast.addmonr;
+	mon.new Raider DG Tower; mon.pos  90  -30; ast.addmonr;
+	mon.new Raider DG Tower; mon.pos  90   30; ast.addmonr;
+	mon.new Raider DG Tower; mon.pos -30  -80; ast.addmonr;
+	mon.new Raider DG Tower; mon.pos -30   80; ast.addmonr;
+	mon.new Raider DG Tower; mon.pos  30  -80; ast.addmonr;
+	mon.new Raider DG Tower; mon.pos  30   80; ast.addmonr;
+poppos
+*5 mon.new Raider Gun Tower; ast.spawnmon
+*6 mon.new Raidship; ast.spawnmon
+*29 mon.new Raider; ast.spawnmon
+*12 mon.new Raider Solar Array; ast.spawnmon
+
+
+# Raidship
+# Raider
+# Raider Gun Tower
+# Raider DG Tower
+# Raider X-Cannon Tower
+# Raider Galtix Tower
+# Raider Solar Array
+# Raider Fission Plant
+# Raider Fusion Plant
+
+

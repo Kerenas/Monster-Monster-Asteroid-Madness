@@ -1,0 +1,12 @@
+###### Stalkplant Farm ######
+# author : Eric Killeen
+# date : 1Nov2004
+
+mon.new Hut; mon.pos 200 200; ast.addmon
+
+pushpos 220 250; include _stalkrow.mmam; poppos
+pushpos 220 300; include _stalkrow.mmam; poppos
+pushpos 220 350; include _stalkrow.mmam; poppos
+pushpos 220 400; include _stalkrow.mmam; poppos
+pushpos 220 450; include _stalkrow.mmam; poppos
+

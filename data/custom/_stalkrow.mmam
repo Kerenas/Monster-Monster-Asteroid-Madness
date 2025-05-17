@@ -1,0 +1,3 @@
+#stalk row for building a stalk plant farm
+*8   mon.new Stalk Plant; mon.pos   0 0; ast.addmonr; movpos 40 0
+

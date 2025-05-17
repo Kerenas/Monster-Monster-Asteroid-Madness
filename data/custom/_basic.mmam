@@ -1,0 +1,5 @@
+###### Basic Foliage ######
+# author : Eric Killeen
+# date : 17Nov2004
+*22 mon.new Fern; ast.spawnmon
+*15 mon.new Shrub; ast.spawnmon
