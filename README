@@ -1,0 +1,12 @@
+To Compile mmam you need:
+allegro http://alleg.sf.net/
+jpalleg
+
+optional libs:
+DUMB http://dumb.sf.net (playing in game music)
+libogg
+libvorbis
+
+
+Documentation on how to play is in the docs/html directory.
+
