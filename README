@@ -1,12 +1,29 @@
 To Compile mmam you need:
-allegro http://alleg.sf.net/
-jpalleg
-
-optional libs:
+allegro 4.3.1 http://alleg.sf.net/
+jpalleg(use argument WANT_JPGALLEG=1 before your cmake command)
+alogg(included in allegro files, use argument WANT_LOGG=1 before your cmake command)
 DUMB http://dumb.sf.net (playing in game music)
 libogg
 libvorbis
 
+Virtual Machine used:
+Boxes
+
+OS used for VM
+MX-Linux 32-bit(required to be 32-bit to compile)
+
 
 Documentation on how to play is in the docs/html directory.
+
+
+Current to/do list:
+Convert Alogg mentions in code to Logg OR find a way to properly make all Logg files named as Alogg files
+remove sound dependence
+make the --without-alogg and --without-dumb arguments for./config function properly
+update some code(relies on a 20 year old compiler)
+
+Actually get the game running
+
+
+If people want to just backseat me, let me know and I'll pop open a twitch stream
 
