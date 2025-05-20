@@ -1,0 +1,15 @@
+Vincent Penquerc'h - lyrian -at- kezako -dot- net
+    All of the rest of alogg
+
+Eric Botcazou
+    Fixes for compilation with DJGPP and Allegro 4
+    Makefile support for Mingw32, Makefile improvements
+
+Alexandre Pineau
+    alogg-config's man page
+
+Juraj Michalek
+    Fixes for compilation with GCC 3.2.3
+
+Daniel Schlyder
+    Fix for static link on Windows/MinGW32

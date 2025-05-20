@@ -1,0 +1,380 @@
+#     _      _ _
+#    /_\  __| (_)_ __  ___
+#   / _ \/ _` | | '  \/ -_)
+#  /_/ \_\__,_|_|_|_|_\___|
+#
+#  makefile.all:
+#  Makefile for the Adime library. Requires GNU make.
+#
+#  By Sven Sandberg
+#
+#  See readme.txt for more information about Adime.
+#
+#
+#  Available options:
+#
+#     Targets:
+#
+#        default       Build library, docs and example.
+#        install       Install library into system directories.
+#        all           Build both optimized and debug version.
+#        installall    Install both library versions into system directories.
+#        lib           Build only the library.
+#        docs          Build only the documentation.
+#        chm-docs      Build documentation in chm format.
+#        examples      Build the examples.
+#        clean         Remove rebuildable files.
+#        compress      Compress the example executable using upx.
+#        help          Display this help. Requires sed.
+#
+#     Developer Targets:
+#
+#        depend:       Regenerate dependencies.
+#        veryclean:    Remove rebuildable files, including dependencies.
+#        rewhisp:      Reformat all text files to unix format using whisped.
+#        rewhisp-dos:  Reformat all text files to dos format using whisped.
+#        zipupd-big:   Create developer zip with additional stuff from dos.
+#        zipupu-big:   Create developer zip from unix (not yet implemented).
+#
+#     Variables:
+#
+#        DEBUGMODE=1         Include debug info in the library.
+#        ADIME_FORTIFY=1     Include memory debugger.
+#        ADIME_DEVELOPING=1  Enable some obscure debuggin macros in adime.h.
+#
+##
+
+include misc/makefile.ver
+
+LIB_SOURCE = \
+ adialogf.c \
+ adime.c \
+ calcedit.c \
+ dbool.c \
+ dbutrow.c \
+ dbutton.c \
+ dchain.c \
+ ddialogf.c \
+ dfilenam.c \
+ dfloat.c \
+ dgreybol.c \
+ dinteger.c \
+ dline.c \
+ dlists.c \
+ dnothing.c \
+ dpfloat.c \
+ dpintege.c \
+ dstring.c \
+ fsel.c \
+ gui.c \
+ eval.c \
+ keynames.c \
+ nan.c \
+ parsemod.c \
+ register.c
+
+
+# For development only: this turns on the use of Fortify, the memory
+# debugger.
+ifdef ADIME_FORTIFY
+LIB_SOURCE += \
+ fortify.c \
+ fortify2.c
+endif
+
+# These are not yet official (need to write gui procs for editbox):
+# clipboar.c \
+# edit.c \
+# Message box is not yet implemented:
+# messbox.c \
+
+EXAMPLES_SOURCE = exanim.c exchain.c exdialog.c exbutrow.c
+
+MAKEDOC_FILES = chm devh doc html man misc rtf texi txt
+MAKEDOC_FILES := $(addprefix misc/makedoc/make,$(MAKEDOC_FILES))
+MAKEDOC_SOURCE := $(addsuffix .c,$(MAKEDOC_FILES))
+MAKEDOC_FILES := $(addsuffix .h,$(MAKEDOC_FILES)) $(MAKEDOC_SOURCE)
+RUNNER_SOURCE = misc/runner.c
+
+CLEAN_OBJ_FILES = \
+ obj/*/*.o obj/*/*/*.o obj/*/*/*/*.o \
+ obj/*/*.obj obj/*/*/*.obj obj/*/*/*/*.obj
+
+CLEAN_LIB_FILES = \
+ lib/*/*.a lib/*/*/*.a lib/*/*/*/*.a \
+ lib/*.so* lib/*/*.so* lib/*/*/*.so* lib/*/*/*/*.so* \
+ lib/*.lib lib/*/*.lib lib/*/*/*.lib lib/*/*/*/*.lib \
+ lib/*.exp lib/*/*.exp lib/*/*/*.exp lib/*/*/*/*.exp \
+ lib/*.dll lib/*/*.dll lib/*/*/*.dll
+
+CLEAN_EXE_FILES = \
+ *.exe */*.exe \
+ $(addprefix examples/,$(addsuffix $(EXE_SUFFIX),$(basename $(EXAMPLES_SOURCE)))) \
+ misc/makedoc/makedoc$(EXE_SUFFIX)
+
+CLEAN_DOC_FILES = \
+ docs/html/*.htm docs/html/*.html docs/rtf/*.rtf \
+ docs/info/*.inf docs/info/*.info docs/texi/*.txi docs/texi/*.texi \
+ docs/chm/*.chm docs/chm/*.hhc docs/chm/*.hhk docs/chm/*.hhp \
+ docs/chm/*.html docs/chm/*.htm \
+ docs/devhelp/*.html docs/devhelp/*.devhelp \
+ docs/man/*.3 \
+ docs/adime.dvi docs/adime.ps docs/adime.ps.gz docs/adime.pdf
+
+CLEAN_MISC_FILES = \
+ *.log */*.log */*/*.log core */core */*/core \
+ lib/*/*.pdb lib/*/*.ilk lib/*/*.map *.pdb */*.pdb \
+ lib.rsp obj.rsp \
+ */*.ilk */*.map */*.sym gmon.out */gmon.out */*.prf
+ 
+CLEAN_FILES = $(CLEAN_DOC_FILES) $(CLEAN_MISC_FILES) \
+ $(CLEAN_OBJ_FILES) $(CLEAN_LIB_FILES) $(CLEAN_EXE_FILES) \
+
+VERY_CLEAN_FILES = \
+ */makefile.dep */*/makefile.dep */*/*/makefile.dep */*/*/*/makefile.dep \
+ lib/*.def lib/*/*.def lib/*/*/*.def \
+ adime.txt changes.txt license.txt readme.txt thanks.txt \
+ docs/txt/*.txt
+
+VPATH = src examples docs
+
+PACKAGE5_OPTIMIZED = adime
+PACKAGE4_OPTIMIZED = adim
+DESCRIPTION_OPTIMIZED = optimized
+
+ifdef DEBUGMODE
+PACKAGE5 = adimd
+PACKAGE4 = adid
+DESCRIPTION = debugging
+else
+PACKAGE5 = $(PACKAGE5_OPTIMIZED)
+PACKAGE4 = $(PACKAGE4_OPTIMIZED)
+DESCRIPTION = $(DESCRIPTION_OPTIMIZED)
+endif
+
+# By default, Allegro is linked the same way as Adime, but this can be
+# overridden.
+# Note that it is not a good idea to do anything particular with the
+# STATICLINK_ALLEGRO or NO_STATICLINK_ALLEGRO variables, since it would be
+# bad to have two dlls around with the same name that link differently to
+# Allegro.
+ifdef STATICLINK
+ifndef NO_STATICLINK_ALLEGRO
+STATICLINK_ALLEGRO=1
+endif
+endif
+
+
+# Tell the platform specific makefile to look for Allegro's makedoc.
+NEED_MAKEDOC = 1
+
+
+
+# -------- Include platform specific makefile. --------
+
+.PHONY: _default
+
+_default: default
+
+include misc/$(MAKEFILE_INC)
+include misc/makefile.def
+
+
+
+# -------- Set variables --------
+
+DOCBASEFILES = adime dime internal license readme changes expressi thanks wishlist
+DOCS  = $(addprefix docs/txt/,$(addsuffix .txt,adime internal expressi wishlist))
+DOCS += $(addprefix docs/rtf/,$(addsuffix .rtf,$(DOCBASEFILES)))
+DOCS += $(addprefix docs/html/,$(addsuffix $(HTML_SUFFIX),$(DOCBASEFILES)))
+DOCS += license.txt readme.txt changes.txt thanks.txt
+CHMDOCS = $(addprefix docs/chm/,$(addsuffix $(HTML_SUFFIX),$(DOCBASEFILES)))
+DEVHELPDOCS = $(addprefix docs/devhelp/,$(addsuffix $(HTML_SUFFIX),$(DOCBASEFILES)))
+ifdef HAVE_TEXINFO
+DOCS += docs/info/adime$(INFO_SUFFIX)
+endif
+ifdef HAVE_MAN
+DOCS += docs/man/adime_init.3
+endif
+
+ifndef LIB_OBJS
+LIB_OBJS = $(addprefix $(OBJ_DIR)/,$(addsuffix $(OBJ_SUFFIX),$(basename $(LIB_SOURCE))))
+endif
+MAKEDOC_OBJS = $(addprefix $(OBJ_DIR)/,$(addsuffix $(OBJ_SUFFIX),$(basename $(notdir $(MAKEDOC_SOURCE)))))
+EXAMPLES_OBJS = $(addprefix $(OBJ_DIR)/,$(addsuffix $(OBJ_SUFFIX),$(basename $(EXAMPLES_SOURCE))))
+EXAMPLES_NAME = $(addprefix examples/,$(addsuffix $(EXE_SUFFIX),$(basename $(EXAMPLES_SOURCE))))
+
+
+
+# -------- Compile --------
+
+.PHONY: default all lib examples docs clean compress donemsg
+
+.PRECIOUS: docs/texi/%$(TEXI_SUFFIX) $(OBJ_DIR)/%$(OBJ_SUFFIX)
+
+default: startmsg lib examples docs donemsg
+
+startmsg:
+	@echo Compiling Adime for $(PLATFORM), $(DESCRIPTION). Please wait.
+
+all:
+	$(MAKE) startmsg lib DEBUGMODE=1
+	$(MAKE) startmsg lib examples docs
+	@echo Adime for $(PLATFORM) has been compiled.
+	@echo Run make installall to complete the installation.
+
+installall:
+	$(MAKE) install
+	$(MAKE) install DEBUGMODE=1
+	@echo Both Adime library versions have been installed!
+
+lib: $(LIB_NAME)
+
+examples: $(LIB_NAME) $(EXAMPLES_NAME)
+
+docs: $(DOCS)
+
+donemsg:
+	@echo The $(DESCRIPTION) library for $(PLATFORM) has been compiled.
+	@echo Run make install to complete the installation.
+
+clean:
+	-rm -fv $(CLEAN_FILES)
+
+veryclean:
+	-rm -fv $(VERY_CLEAN_FILES) $(CLEAN_FILES)
+
+compress:
+ifdef UPX_PROGRAM
+	$(UPX_PROGRAM) $(EXAMPLES_NAME) $(wildcard lib/*/$(PACKAGE4_OPTIMIZED)$(LIB_VERSION).dll)
+else
+	@echo No executable compressor specified! You must set the environment variable
+	@echo UPX_PROGRAM to point to upx.exe.
+endif
+
+# This file needs to be compiled without optimization.
+$(OBJ_DIR)/nan$(OBJ_SUFFIX): nan.c $(COMPILE_C_TO_OBJ_DEPS)
+	$(COMPILE_C_TO_OBJ_NO_OPTIMIZE)
+
+$(OBJ_DIR)/%$(OBJ_SUFFIX): %.c $(COMPILE_C_TO_OBJ_DEPS)
+	$(COMPILE_C_TO_OBJ)
+
+$(LIB_NAME): $(LIB_OBJS) $(LINK_LIB_DEPS)
+	$(LINK_LIB)
+
+ifndef NATIVE_LINK_EXE
+examples/%$(EXE_SUFFIX): $(OBJ_DIR)/%$(OBJ_SUFFIX) $(LIB_NAME) $(LINK_EXE_DEPS)
+	$(LINK_EXE)
+
+ifneq ($(MAKEDOC_DEP),)
+$(MAKEDOC_DEP): $(MAKEDOC_OBJS) $(LINK_EXE_CONSOLE_ALL_NOLIB_DEPS)
+	$(LINK_EXE_CONSOLE_ALL_NOLIB)
+
+$(OBJ_DIR)/make%$(OBJ_SUFFIX): misc/makedoc/make%.c $(COMPILE_C_TO_OBJ_DEPS)
+	$(COMPILE_C_TO_OBJ)
+endif
+
+ifneq ($(RUNNER_DEP),)
+$(RUNNER): $(RUNNER_SOURCE)
+	$(COMPILE_RUNNER)
+endif
+endif
+
+chm-docs: docs/chm/adime.chm
+
+devhelp-docs: docs/devhelp/adime.devhelp
+	@echo "Generated devhelp documentation"
+
+man-docs: docs/man/adime_init.3
+	@echo "Generated man pages"
+
+dvi-docs: docs/adime.dvi
+	@echo "Generated device independent documentation: docs/adime.dvi"
+	@echo "Run make ps-docs to generate postscript documentation"
+	@echo "Run make pdf-docs to generate pdf documentation"
+
+ps-docs: docs/adime.ps
+	@echo "Generated postscript documentation: docs/adime.ps"
+	@echo "Run make gzipped-ps-docs to compress it."
+
+gzipped-ps-docs: docs/adime.ps
+	gzip -9 docs/adime.ps
+	@echo "Compressed postscript documentation: docs/adime.ps.gz"
+
+pdf-docs: docs/adime.pdf
+	@echo "Generated pdf documentation: docs/adime.pdf"
+
+
+%.txt: docs/src/%._tx $(MAKEDOC_DEP)
+	-$(MAKEDOC_PROGRAM) -ascii $@ $<
+
+docs/txt/%.txt: docs/src/%._tx $(MAKEDOC_DEP)
+	-$(MAKEDOC_PROGRAM) -ascii $@ $<
+
+docs/html/%$(HTML_SUFFIX): docs/src/%._tx $(MAKEDOC_DEP)
+	-$(MAKEDOC_PROGRAM) $(_TX_HTML_FLAG) $@ $<
+
+docs/rtf/%.rtf: docs/src/%._tx $(MAKEDOC_DEP)
+	-$(MAKEDOC_PROGRAM) -rtf $@ $<
+
+docs/man/adime_init.3: docs/src/adime._tx $(MAKEDOC_DEP)
+	$(MAKEDOC_PROGRAM) -man docs/man/dummyname.3 $<
+
+docs/info/%$(INFO_SUFFIX): docs/texi/%$(TEXI_SUFFIX)
+	-makeinfo --no-split -o $@ $<
+
+docs/texi/%$(TEXI_SUFFIX): docs/src/%._tx $(MAKEDOC_DEP)
+	-$(MAKEDOC_PROGRAM) $(_TX_TEXI_FLAG) $@ $<
+
+docs/chm/%$(HTML_SUFFIX): docs/src/%._tx $(MAKEDOC_DEP)
+	$(MAKEDOC_PROGRAM) -ochm $(_TX_HTML_FLAG) $@ $<
+
+docs/chm/adime.chm: $(CHMDOCS) docs/src/adime._tx $(MAKEDOC_DEP)
+	$(MAKEDOC_PROGRAM) -chm docs/chm/adime$(HTML_SUFFIX) docs/src/adime._tx
+	-hhc docs/chm/adime.hhp
+
+docs/devhelp/%$(HTML_SUFFIX): docs/src/%._tx $(MAKEDOC_DEP)
+	$(MAKEDOC_PROGRAM) -odevhelp -html $@ $<
+
+docs/devhelp/adime.devhelp: $(DEVHELPDOCS) docs/src/adime._tx $(MAKEDOC_DEP)
+	$(MAKEDOC_PROGRAM) -devhelp docs/devhelp/adime$(HTML_SUFFIX) docs/src/adime._tx
+
+docs/adime.dvi: docs/texi/adime.texi
+	cd docs && texi2dvi -c texi/adime.texi && cd ..
+
+docs/%.ps: docs/%.dvi
+	dvips -o $@ $<
+
+docs/%.pdf: docs/%.dvi
+	dvipdf $< $@
+
+
+
+# -------- Misc stuff --------
+
+help:
+	@sed -n -e "/##/q" -e "s/#\(.*\)/\1/p" < misc/makefile.all
+
+
+
+# -------- Some targets to help make the distribution. --------
+
+rewhisp:
+	whisped -f3t0olke1u +*._tx +*.txt
+	whisped -f3t0olke1u +*.sh
+	whisped -f3t0olke1d *.bat
+	whisped -f3t0olke1u +*.c +*.h
+	whisped -f3t3olke1u misc/makefile.* misc/emptymak
+
+rewhisp-dos:
+	whisped -f3t0olke1d +*._tx +*.txt
+	whisped -f3t0olke1u +*.sh
+	whisped -f3t0olke1d *.bat
+	whisped -f3t0olke1d +*.c +*.h
+	whisped -f3t3olke1d misc/makefile.* misc/emptymak
+
+
+
+# -------- Dependencies. --------
+
+-include $(OBJ_DIR)/makefile.dep

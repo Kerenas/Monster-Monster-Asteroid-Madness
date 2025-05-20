@@ -1,0 +1,697 @@
+
+                              _      _ _
+                             /_\  __| (_)_ __  ___
+                            / _ \/ _` | | '  \/ -_)
+                           /_/ \_\__,_|_|_|_|_\___|
+
+                           Allegro Dialogs Made Easy
+
+                                 API Reference
+
+                               by Sven Sandberg
+
+
+
+===============================================
+============ Main Dialog Functions ============
+===============================================
+
+int adime_init(void);
+   Initializes the Adime system. Call it before using any other Adime
+   functions and after calling `allegro_init()'. Returns zero on success and
+   nonzero on error.
+
+int adime_exit(void);
+   Shuts down the Adime system. You don't normally need to call this function
+   since `adime_init()' will arrange for it to be called automatically when
+   your program exits or `allegro_exit()' is called.
+
+#define ADIME_VERSION_MAJOR
+#define ADIME_VERSION_MINOR
+#define ADIME_VERSION_PATCH
+#define ADIME_DATE
+   The version number (major.minor.patch) of your version of Adime, and the
+   date when it was released in the form yyyymmdd.
+
+int adime_dialogf(const char *title, int x, y, w, const char *format, ...);
+   Displays a dialog letting the user edit several different kinds of data.
+   `title' specifies the caption of the dialog while `x' and `y' specify the
+   top left corner of the dialog. Alternatively, either `x' or `y' or both
+   can be set to `ADIME_ALIGN_CENTRE' or `ADIME_ALIGN_RIGHT', in which case
+   the dialog will be centred respectively right aligned. `w' specifies the
+   width of the input field. The total width of the dialog depends on this
+   number, and on the length of the strings given to the dialog.
+
+   The format string consists of one or more field descriptions, each
+   followed be exactly one format specifier. The field description is a hint
+   text used to help the user know what the field should contain. The format
+   specifier is a percent sign, followed by an identifier, followed by a
+   pair of square brackets (possibly with some extra options between (which
+   I will refer to as "format modifier")) and can be any of the following:
+
+      %bool[]
+         A check box, which can be either on or off. Next argument should be
+         an `int *', which will be set to 0 for off and 1 for on. Don't use
+         other values!
+
+      %greybool[]
+         A three-state greyable check box. Next argument should be an
+         `int *', which will be set to 0 for off, 1 for on, or 2 for greyed.
+         Don't use other values!
+
+      %double[x,y], %float[x,y],
+      %int[x,y], %short[x,y], %char[x,y],
+      %uint[x,y], %ushort[x,y], %uchar[x,y],
+         A number in the given format (uchar, ushort and uint are unsigned).
+         The number will be clamped to the interval `x' to `y', inclusive.
+         You may omit `x' or `y' or both (but keep the comma!) to make it be
+         the minimum respectively maximum for the data type. Next argument
+         should be a pointer to the given data type.
+
+      %pdouble[x,y], %pfloat[x,y],
+      %pint[x,y], %pshort[x,y], %pchar[x,y],
+      %puint[x,y], %pushort[x,y], %puchar[x,y],
+         "Plain" number formats: With the corresponding formats not prefixed
+         by "p", the user can actually enter any mathematical expression,
+         but these formats disable that feature so he can only enter
+         numbers. Otherwise equal to their non-p-prefixed counterparts.
+
+      %string[bytes]
+         A string of length <= `bytes' (in bytes). Next argument should be
+         a `char *' with room for at least the given number of characters.
+         Remember that the number of characters that fit in the string will
+         be less if you use Unicode. With UTF-8, a character may be as long
+         as six bytes, and with Unicode they are always 2 bytes.
+
+      %filename[len,extension,title]
+         A filename of length <= `len'. Next argument should be a `char *'
+         with room for at least the given number of bytes (this really is
+         bytes, not characters, and a UTF-8 string can have characters that
+         are 6 bytes long, so you should allocate six times as many bytes as
+         you want characters!). The user will be able to enter the filename
+         as a text or click a button to bring up a file selector. `extension'
+         is a semicolon-separated list of file extensions (ie in the format
+         "bmp;pcx;tga;foo") which will be accepted by the file selector. You
+         may omit `extension' (but keep the commas!), meaning that all file
+         formats will be accepted. `title' is the title of the file selector
+         dialog. You may also omit `title' (but keep the commas!), meaning
+         that the description text for this field will be used.
+
+      %list[lines,list]
+         The user can select an element in a list of strings. `lines'
+         specifies the height, in lines, of the list box (this can be
+         omitted to let the function calculate the height for you). `list'
+         is a semicolon-separated list of strings (if one or more strings
+         needs to contain a semicolon (';') or an end bracket (']'), the
+         character can be escaped by a percent sign ('%')). Next argument
+         should be an `int *', which will be set to the index of the
+         string.
+
+      %vlist[lines]
+         The user can select an element in a list of strings. `lines'
+         specifies the height, in lines, of the list box (this can be
+         omitted to let the function calculate the height for you). Next
+         argument should be an `int *', which will be set to the index of
+         the selected string, and then a `char **' which specifies the
+         strings to choose among, then an `int' which tells how many
+         strings the list contains.
+
+      %datafile[lines,types]
+         The user can select an element in an Allegro DATAFILE. You should
+         pass first an `int *', which will be set to the index of the
+         datafile that was selected, and then a `DATAFILE *', which should
+         be the datafile to look in. `lines' specifies the height, in
+         lines, of the list box (this can be omitted to let the function
+         calculate the height for you). `types' is a semicolon-separated
+         list of datafile types. You must include all four characters in
+         each type, so it could for example look like this:
+
+            "%datafile[7,BMP ;RLE ;XCMP; CMP]"
+
+
+      %wlist[lines,title,list]
+      %wvlist[lines,title]
+      %wdatafile[lines,title,types]
+         Like %list[], %vlist[] and %datafile, but rather than having the
+         list box in the window, a button will be displayed. When the user
+         clicks the button, a new window with the actual list in (and with
+         the given title) will be opened.
+
+      %nothing[]
+         No input data. Will only display the preceding description text as
+         usually. This can be used if you want a section of the dialog to
+         have a special header.
+
+      %line[]
+         No input data. Will only display the preceding description text (if
+         there is any) as usually, and then a horizontal delimitor line.
+         Like %nothing[], this can be used if you want a section of the
+         dialog to be delimited from the rest of the dialog.
+
+      %button[text]
+         A button (with the given text on) which calls your custom callback.
+         Next argument should be a function pointer, pointing to a function
+         of the type
+
+            int my_callback(DIALOG *d);
+
+         This will be called when the user clicks the button. It will be
+         given the dialog object representing the button. Its return value is
+         a bit special: If it is 0, then nothing happens. If it is
+         ADIME_REDRAW (which is defined to be the smallest negative number),
+         then the dialog will be redrawn. If it is any other positive number,
+         then the dialog will exit with that return value not saving the
+         results of the dialog (the usual behavior of a cancel button). If it
+         is any other negative number, then the sign will be removed and the
+         unsigned number returned, and the contents of the dialog will be
+         saved (the usual behavior of the ok button).
+
+         You are allowed to open a new dialog inside your callback, which may
+         be a less messy and more flexible alternative to %dialogf[].
+
+      %buttonrow[BUTTONS]
+         One or more buttons in a horizontal row. These are displayed the
+         same way as the OK and Cancel buttons (actually, the OK and Cancel
+         buttons are implemented by appending a %buttonrow[] to the end of
+         the dialog). Next argument should be a function pointer, pointing to
+         a function of the type:
+
+            int my_callback(DIALOG *d, int n);
+
+         This will be called with the dialog object for the clicked button
+         as the first argument and the index of this button as the second
+         (i.e., n=1 for the first button, n=2 for the second and so on). The
+         return value works the same way as for %button[] (see above).
+
+         The modifier (BUTTONS) is itself a format string, consisting of a
+         comma-separated list of buttons. Each button begins with the text
+         which will appear on the button. Then comes an optional
+         semicolon-separated list of shortcuts to this button. An example may
+         help to clarify:
+
+            %buttonrow[OK;CTRL+O;ENTER,Cancel;ESC,Help;F1;ALT+H]
+
+         This format will display four buttons: OK, Cancel and Help. The
+         OK button has the shortcuts CTRL-O and ENTER. The Cancel button has
+         the shortcut ESC. The Help button has the shortcuts F1 and ALT-H.
+         Shortcuts are specified in uppercase, with the state of
+         shift, ctrl, alt etc preceding the key to press. The key has the
+         same name as the `KEY_*' macro defined by Allegro (i.e., "ENTER" for
+         `KEY_ENTER', "3" for `KEY_3' and "NUMLOCK" for `KEY_NUMLOCK'). The
+         state consists of zero or more key shift flags separated by plus
+         signs. The names of these are the same as Allegro's `KB_*_FLAG'
+         macros (i.e., "SHIFT" for `KB_SHIFT_FLAG' and "CAPSLOCK" for
+         `KB_CAPSLOCK_FLAG'). If you write e.g. CTRL+O, it means that CTRL
+         must be held down while pressing O in order to activate the
+         shortcut, while it is optional to hold down other key modifiers,
+         e.g., SHIFT. If you don't want the shortcut to be activated when
+         SHIFT is down (for instance), then you can write CTRL+-SHIFT+O,
+         i.e., you precede the forbidden key with a minus sign.
+
+      %dialogf[buttontext]
+         A button which opens another adime_dialogf() sub-dialog. Next
+         argument should be the title of the dialog as a `char *', followed
+         by `x', `y', `edit_w' as `int's and then `format' as a `char *'.
+         These arguments correspond to the arguments given to
+         `adime_dialogf()'. Depending on what `format' contains, you then have
+         to add more parameters which the sub-dialog will alter. `buttontext'
+         is the text which will be displayed on the button which opens the
+         sub-dialog. An example may help to clarify:
+
+         adime_dialogf("My dialog",
+                       ADIME_ALIGN_CENTRE, ADIME_ALIGN_CENTRE, 200,
+                       "Open sub-dialog:%dialog[Click me!]",
+                       "My sub-dialog",
+                       ADIME_ALIGN_CENTRE, ADIME_ALIGN_CENTRE, 200,
+                       "Save in text format:%bool[]",
+                       &text_format);
+
+
+      %vdialogf[buttontext]
+         This is like %dialogf[], except that the `...' arguments are given
+         as an `adime_va_list' rather than being expanded into the same
+         argument list. (see also `adime_va_list')
+
+      %chain[]
+         This is like an "inline" version of %vdialogf[]: You should pass two
+         arguments, first a format string and then an `adime_va_list'. The
+         dialog defined by this format string and `adime_va_list' will be
+         inserted directly into this dialog. (See exchain.c for an example.)
+
+   Any special characters mentioned here can be escaped by placing a percent
+   sign ('%') before it, e.g. if you need a literal ']' character somewhere
+   in the format string. The field description may contain newlines.
+
+   Returns 1 if the user selected the OK button, and 2 if he selected the
+   Cancel button. The `...' parameters will be left untouched if the user
+   clicked Cancel but they will change to the new values if he clicked OK.
+   The initial values of the parameters will be taken as default values in
+   the dialog objects.
+
+   The debug library is very useful when you use this function: It can
+   detect almost all illegal format strings. If it finds one, it shuts down
+   the program with a traceback and writes a description of the error to the
+   file allegro.log.
+
+   An example may help to clarify things (see also the programs in the
+   examples directory):
+
+      char name_buffer[1024] = "";
+      int age = 20;
+      int shoe_size = 40;
+      int married = 0;
+      char filename_buffer[1024] = "";
+
+      adime_dialogf("Fill in personal data",
+                    ADIME_ALIGN_CENTRE, ADIME_ALIGN_CENTRE, 200,
+                    "Name%string[1024]"
+                    "Age (years)%int[0,150]"
+                    "%line"
+                    "Shoe size (Swedish units)%float[10,60]"
+                    "Married%bool[]"
+                    "Favourite text file%filename[1024,txt,Select a text file]",
+                    name_buffer,
+                    &age,
+                    &shoe_size,
+                    &married,
+                    filename_buffer);
+
+int adime_vdialogf(const char *title, int x, y, w, const char *format,
+                   adime_va_list args);
+   This is the same as `adime_dialogf()', but with an `adime_va_list' instead
+   of variable number of arguments.
+
+int adime_lowlevel_dialogf(const char *title, int x, y, w,
+                           const char *format, ...);
+   This is the same as `adime_dialogf()', except it doesn't include the
+   default `OK' and `Cancel' buttons. You will normally want to call this
+   function with the last format being "%buttonrow[]".
+
+int adime_lowlevel_vdialogf(const char *title, int x, y, w,
+                            const char *format, adime_va_list args);
+   This is the same as `adime_lowlevel_dialogf()', but with an
+   `adime_va_list' instead of variable number of arguments.
+
+typedef adime_va_list;
+void adime_va_start(adime_va_list ap, first_arg);
+TYPE adime_va_arg(adime_va_list ap, TYPE);
+void adime_va_end(adime_va_list ap);
+   Because of weirdnesses in the C language, some things that Adime does with
+   va_lists would not be portable if it used a va_list directly. Instead you
+   always have to use this replacement API, which works exactly like the
+   standard API for va_lists, but is more portable. Also, if you pass an
+   `adime_va_list' to another function, which reads an argument with
+   `adime_va_arg()', then the `adime_va_list' will have advanced to the same
+   position in the calling function as in the called function. In particular,
+   after calling `adime_vdialogf()', the `adime_va_list' will have advanced
+   to after the last argument used by Adime.
+
+   The following example shows how `adime_dialogf()' is implemented in terms
+   of `adime_vdialogf()':
+
+      int adime_dialogf(char *title, int x, int y, int edit_w,
+                        char *format, ...)
+      {
+         int ret;
+         va_list ap;
+
+         va_start(ap, format);
+         ret = adime_vdialogf(title, x, y, edit_w, format, ap);
+         va_end(ap);
+
+         return ret;
+      }
+
+   See documentation for the standard `va_list', `va_start()', `va_arg()' and
+   `va_end()' for more information.
+
+
+
+========================================================
+============ Dialog Configuration Variables ============
+========================================================
+
+By tweaking the variables in this section, you can change the general
+appearance of Adime's dialogs.
+
+BITMAP *adime_bmp;
+   If you want the dialog to be displayed on a certain video bitmap other
+   than `screen', set this to point to that bitmap. This is particulary
+   useful if you for some reason have scrolled away from the top left area
+   of the video memory and want the dialog to be displayed on currently
+   visible video memory rather than on the default location. If this is NULL
+   (it is by default), `adime_dialogf()' & co will scroll to the top left
+   corner of screen and use that part to display the dialog on.
+
+FONT *adime_font;
+FONT *adime_title_font;
+FONT *adime_button_font;
+   The font used in general by Adime dialogs and objects, the font for the
+   title of the dialogs and the font for the OK and Cancel buttons. If one
+   of them is NULL (they all are by default), Allegro's `font' will be used.
+
+int adime_yield;
+   Flag indicating whether or not Adime dialogs should call Allegro's
+   function `yield_timeslice()' continuously when it has nothing better to
+   do. Default is `TRUE'. This flag has no effect while the file selector is
+   open: `yield_timeslice()' will always be called then.
+
+int adime_clean_screen;
+   Flag indicating whether or not Adime dialogs should restore the screen
+   after they have been closed. Default is `TRUE', indicating that the screen
+   should be restored.
+
+int adime_window_visible;
+   Flag indicating whether the background window of Adime dialogs should be
+   drawn. Default is `TRUE', indicating it should be drawn.
+
+void (*adime_callback)(DIALOG *d)
+   If you set this to something else than `NULL', then that function will be
+   called continuously as long as a Adime dialog is open. The argument `d'
+   will point to the first object of the current Adime dialog, or the first
+   object of Allegro's file selector when it's open. See
+   adime/examples/exanim.c for an example on how to use this to do animation
+   while a dialog is open.
+
+extern RGB
+   adime_text_rgb,
+   adime_disabled_text_rgb,
+   adime_error_text_rgb,
+   adime_border_rgb,
+   adime_background_rgb,
+   adime_edit_field_rgb,
+   adime_button_rgb,
+   adime_dark_shadow_rgb,
+   adime_shadow_rgb,
+   adime_highlight_rgb,
+   adime_light_highlight_rgb;
+   These variables specify the color of different parts of the dialog shown
+   by `adime_dialogf()'. You may change them if you want other colors (the
+   default is similar to the windows gray semi-3d look). Each r, g, and b
+   component ranges from 0 to 255 no matter which the current color depth is.
+   In 8 bit modes the closest entry in the palette is found, so it is your
+   responsibility to make sure that the palette contains similar colors. As
+   a special case, if you set the `filler' field of the RGB struct to 1
+   rather than 0, then the `r' field will be used without searching the
+   palette. (This can be useful if you depend on a certain palette index to
+   be used.)
+
+   Most of the variable names should be pretty self-explanatory.
+   `adime_disabled_text_rgb' is very seldom used and is the color of text on
+   buttons that can't be pressed. `adime_error_text_rgb' is the color of the
+   result of an expression if the expression was invalid (e.g. contained
+   mismatched parentheses). Hopefully you will understand the other names,
+   but if you don't, they are common enough that you should be able to find
+   out with some trial and error.
+
+extern int
+   adime_window_border_thickness,
+   adime_window_title_spacing,
+   adime_window_button_spacing,
+   adime_window_between_button_spacing,
+   adime_window_description_spacing,
+   adime_window_line_spacing,
+   adime_window_button_w,
+   adime_window_button_h,
+   adime_window_title_border_thickness,
+   adime_window_title_internal_border_thickness;
+   These variables specify the size and spacing of different parts of Adime
+   dialogs. `border_thickness' is the spacing from the border to the
+   contents of the dialog; `title_spacing' is the spacing between the title
+   and the first object; `button_spacing' is the spacing above the OK and
+   Cancel buttons; `between_button_spacing' is the spacing between the
+   buttons; `description_spacing' is the horizontal spacing between the
+   description text and the input field; `line_spacing' is the vertical
+   spacing between two objects in the dialog; `button_w' and `button_h'
+   specify the size of the OK and Cancel buttons; `title_border_thickness' is
+   the space between the dialog title and the edge of the dialog;
+   `title_internal_border_thickness' is the space inside the title from the
+   edge to the text.
+
+   Of these variables, only the `adime_window_title_*' ones affect the file
+   selector.
+
+
+
+=============================================
+============ Other GUI Functions ============
+=============================================
+
+NOTE: Many, maybe all, of these functions may soon move to another library,
+and their API may change at that point. So they may not be forwards
+compatible.
+
+int adime_file_select(const char *message, char *path, const char *ext,
+                      int size, int w, int h);
+   Like Allegro's `file_select_ex()', but with Adime's 3d look and feel. It
+   is not affected by all `adime_window_*' variables though, only the ones
+   beginning with `adime_window_title_*'. Also, it has the extra feature of
+   not changing `path' if it gets cancelled.
+
+int adime_d_double_calc_edit_proc(int msg, DIALOG *d, int c);
+   Gui proc for an edit box accepting a mathematical expression whose result
+   is a floating point number. The result is calculated and displayed on a
+   separate gui object as the user types. The edit box has a 3d-ish look.
+   The dp2 field points to a `struct ADIME_EDIT_NUMBER *' which holds some
+   information about the behavior of the edit box:
+
+   typedef struct ADIME_EDIT_NUMBER
+   {
+      int is_signed;          /* Set for integer formats if it is signed. */
+      int is_float;           /* Set if we only have float, not double. */
+      double min_val, max_val;/* Range for numbers. */
+      DIALOG *result_object;  /* DIALOG object to display result in. */
+   } ADIME_EDIT_NUMBER;
+
+   The `result_object' will be used to display the result of the expression.
+   There is an `adime_d_calc_edit_result_proc' object type which is designed
+   to be used as `result_object', but you may of course write your own object
+   to take care of this. Whenever the user changes the text in the
+   `adime_d_double_calc_edit_proc', the result is printed to the `dp' field of
+   `result_object'; hence you must have set the dp field of `result_object'
+   to a text buffer with enough space (256 bytes is safe). The
+   `result_object' will then be sent a `MSG_DRAW' message with the `c'
+   parameter set to 2 if there is an error in the expression or 1 if it is
+   ok.
+
+int adime_d_int_calc_edit_proc(int msg, DIALOG *d, int c);
+   Like `adime_d_double_calc_edit_proc()', but displaying the result as an
+   integer. If the user tries to enter a floating point value, it will be
+   rounded.
+
+int adime_d_calc_edit_result_proc(int msg, DIALOG *d, int c);
+   Dialog proc for the result of a calculator edit box. The difference
+   between this and Allegro's `d_text_proc()' is that it uses the c parameter
+   to find the color to draw with (see `d_double_calc_edit_proc()'), and it
+   also erases its whole area even if the text doesn't fill it.
+
+int adime_d_line_proc(int msg, DIALOG *d, int c);
+   A simple dialog object which draws a 3d-ish horizontal or vertical line
+   (depending on whether its `w' field is greater or less than its `h'
+   field).
+
+int adime_d_check_proc(int msg, DIALOG *d, int c)
+   Like Allegro's `d_check_box()', but with 3d-ish style.
+
+int adime_d_greyable_check_proc(int msg, DIALOG *d, int c)
+   A three-state greyable version of `adime_d_check_box()'. Unlike
+   `adime_d_check_proc()', this does not use the (flags & D_SELECTED) flag
+   to determine the state of the check box. Instead, the d1 field is 0 for
+   off, 1 for on, and 2 for greyed.
+
+int adime_d_list_proc(int msg, DIALOG *d, int c)
+   Like Allegro's `d_list_proc()', but with 3d-ish style.
+
+int adime_d_text_list_proc(int msg, DIALOG *d, int c)
+   Like Allegro's `d_text_list_proc()', but with 3d-ish style.
+
+int adime_d_edit_proc(int msg, DIALOG *d, int c)
+   Like Allegro's `d_edit_proc()', but with 3d-ish style. Note that the 3d
+   border is three pixels wide, so you have to add those pixels to the size
+   of the edit box. It also adds an extra feature: The `d->d1' field, if
+   positive, is the maximal number of characters, just like with
+   d_edit_proc(). But you may also set it to be negative, meaning that (after
+   removing the sign) it is the maximal number of bytes occupied by the
+   string, including the trailing zero. (This may be different from the
+   number of characters when you use Unicode.)
+
+int adime_d_button_proc(int msg, DIALOG *d, int c)
+   Similar to Allegro's `d_button_proc()', but with 3d-ish style. It also has
+   a slightly different behaviour: Unlike `d_button_proc()', the D_EXIT flag
+   has no effect. Instead you need to set the `d1' field to one of the three
+   constants:
+
+      ADIME_BUTTON_TOGGLE
+         The button behaves like a check box, i.e. when clicked it toggles
+         between being in and being out.
+
+      ADIME_BUTTON_EXIT
+         The button exits the dialog when clicked.
+
+      ADIME_BUTTON_CALLBACK
+         If you provide a callback function in the dp2 field, then it will
+         be called whenever the button is clicked. This callback should have
+         the form `int my_callback(DIALOG *d)', and its return value will be
+         passed back to the dialog manager.
+
+int adime_d_multiline_text_proc(int msg, DIALOG *d, int c)
+   Like Allegro's `d_text_proc()', but supports newlines ('\n') in the
+   string.
+
+int adime_d_window_proc(int msg, DIALOG *d, int c)
+   Gui proc that draws a window. The `dp' field should be the caption of
+   the dialog, as a string. All fields except x, y, w, h are ignored. Note
+   that this object is purely cosmetical: you can't move or resize the
+   window.
+
+void adime_draw_empty_button(BITMAP *bmp, int x1, int y1, int x2, int y2,
+                             int face_color, int xlight, int light,
+                             int dark, int xdark)
+   Draws an empty button on the given position of the bitmap, using the
+   given colors.
+
+void adime_draw_text_button(BITMAP *bmp, int x1, int y1, int x2, int y2,
+                            int face_color, int text_color,
+                            int xlight, int light, int dark, int xdark,
+                            const FONT *f, const char *text)
+   Draws a button with a text on it, at the given position of the bitmap and
+   using the given colors and font.
+
+void adime_draw_text_button_down(BITMAP *bmp,
+                                 int x1, int y1, int x2, int y2,
+                                 int face_color, int text_color,
+                                 int xlight, int light, int dark, int xdark,
+                                 const FONT *f, const char *text)
+   Like `adime_draw_text_button()', but draws the button pressed down.
+
+void adime_draw_picture_button(BITMAP *bmp, int x1, int y1, int x2, int y2,
+                               int face,int xlight, int light, int dark, int xdark,
+                               BITMAP *sprite)
+   Draws a button with a sprite on it at the given position of the bitmap
+   and using the given colors and sprite.
+
+void adime_draw_picture_button_down(BITMAP *bmp,
+                                    int x1, int y1, int x2, int y2,
+                                    int face, int xlight, int light,
+                                    int dark, int xdark,
+                                    BITMAP *sprite)
+   Like `adime_draw_picture_button()', but draws the button pressed down.
+
+void adime_fill_textout(BITMAP *bmp, const FONT *f, const char *text,
+                        int x, int y, int w, int fg, int bg)
+   Like Allegro's `textout()', but erases the whole area of width `w' if the
+   text doesn't cover it. If the text is longer than `w' it will be clipped.
+
+
+
+=========================================
+============ Other Functions ============
+=========================================
+
+double adime_evaluate(const char *equation, int *error,
+                      double (*var)(const char *name));
+   Helper function for evaluating arithmetic expressions, which may be
+   useful in your programs even though it isn't really logically connected
+   to the other functions (i.e. it's not a gui function). It evaluates the
+   provided equation, returning the result, and storing a nonzero value in
+   `error' if anything goes wrong. If the `var' function is not NULL, this
+   will be called whenever a variable is encountered in the expression,
+   allowing you to look up and return a suitable value for it. For more
+   information on the expressions, see expressi.txt
+
+double adime_uevaluate(const char *equation, int *error,
+                       double (*var)(const char *name));
+   Like `adime_evaluate()', but tweaked to fit Adime's purposes better: It
+   silently accepts an empty string without error (being equivalent to "0"),
+   it supports Unicode and it gives an error if the result is NaN.
+
+void adime_double2string(double x, char *buf);
+   Function for pretty-printing floating point numbers: The number gets at
+   most 10 digits to the left of the decimal point, at most 9 to the right
+   of it, and at most 10 totally. If the absolute value of the number is
+   >= 10000000000 or < 0.000001, it is written in exponential form
+   instead. Exponential form has at most 6 digits in the mantissa, so that
+   the total number of digits never exceeds 9. Does not support Unicode.
+
+void adime_udouble2string(double val, char *buf)
+   Unicode-aware version of `adime_double2string()'.
+
+char *adime_scancode_to_short_name(int scancode, char *buf)
+   Converts a keyboard scancode to a string. The string is exactly the text
+   after `KEY_' in the macro name for the key (so the function returns
+   "DELETE" if you feed it with KEY_DELETE). Returns the buffer, or NULL if
+   the scancode didn't match any known key.
+
+char *adime_scancode_to_pretty_name(int scancode, char *buf)
+   The result from `adime_scancode_to_short_name()' is sometimes an
+   abbreviation and may contain underscores. You may want to use this
+   function instead if you are going to display the result for the user: it
+   returns more user-friendly strings.
+
+int adime_short_name_to_scancode(const char *short_name)
+   Given the name for a key as a string (in the format given by
+   `adime_scancode_to_short_name()'), this function returns the scancode for
+   the key, or -1 if the string doesn't represent any known scancode.
+
+
+
+======================================================
+============ Reducing the Executable Size ============
+======================================================
+
+If you don't use all the adime_dialogf() formats, then you can declare a list
+of all formats that you use so that the others don't get linked into the
+executable. This will only save up to about 10 KB, but see Allegro's
+documentation (the "Reducing your executable size" section) for more hints
+on how to get rid of much more size. The list of formats should look like
+this:
+
+   ADIME_BEGIN_FORMAT_LIST
+      format1
+      format2
+      etc...
+   ADIME_END_FORMAT_LIST
+
+where format1, format2 etc are any of the macros:
+
+   ADIME_FORMAT_BOOL
+   ADIME_FORMAT_BUTTON
+   ADIME_FORMAT_STRING
+   ADIME_FORMAT_FILENAME
+   ADIME_FORMAT_VLIST
+   ADIME_FORMAT_LIST
+   ADIME_FORMAT_DATAFILE
+   ADIME_FORMAT_WVLIST
+   ADIME_FORMAT_WLIST
+   ADIME_FORMAT_WDATAFILE
+   ADIME_FORMAT_DIALOGF
+   ADIME_FORMAT_VDIALOGF
+   ADIME_FORMAT_INT
+   ADIME_FORMAT_PINT
+   ADIME_FORMAT_UINT
+   ADIME_FORMAT_PUINT
+   ADIME_FORMAT_SHORT
+   ADIME_FORMAT_PSHORT
+   ADIME_FORMAT_USHORT
+   ADIME_FORMAT_PUSHORT
+   ADIME_FORMAT_CHAR
+   ADIME_FORMAT_PCHAR
+   ADIME_FORMAT_UCHAR
+   ADIME_FORMAT_PUCHAR
+   ADIME_FORMAT_DOUBLE
+   ADIME_FORMAT_PDOUBLE
+   ADIME_FORMAT_FLOAT
+   ADIME_FORMAT_PFLOAT
+   ADIME_FORMAT_LINE
+   ADIME_FORMAT_NOTHING
+   ADIME_FORMAT_BUTTONROW
+   ADIME_FORMAT_CHAIN
+
+Like in Allegro, this will only work for the statically linked library.
+Note that ADIME_FORMAT_BUTTONROW and ADIME_FORMAT_CHAIN are used internally,
+so you shouldn't remove them unless you are sure that you know what you are
+doing.
+
+
+
+

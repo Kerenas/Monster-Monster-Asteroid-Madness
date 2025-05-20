@@ -1,0 +1,80 @@
+obj/unix/adime/adialogf.o: src/adialogf.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/adime.o: src/adime.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/calcedit.o: src/calcedit.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/clipboar.o: src/clipboar.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/dbool.o: src/dbool.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/dbutrow.o: src/dbutrow.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/dbutton.o: src/dbutton.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/dchain.o: src/dchain.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/ddialogf.o: src/ddialogf.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/dfilenam.o: src/dfilenam.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/dfloat.o: src/dfloat.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/dgreybol.o: src/dgreybol.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/dinteger.o: src/dinteger.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/dline.o: src/dline.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/dlists.o: src/dlists.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/dnothing.o: src/dnothing.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/dpfloat.o: src/dpfloat.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/dpintege.o: src/dpintege.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/dstring.o: src/dstring.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/edit.o: src/edit.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/eval.o: src/eval.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/fortify.o: src/fortify.c
+obj/unix/adime/fortify2.o: src/fortify2.c include/fortify2.h
+obj/unix/adime/fsel.o: src/fsel.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/gui.o: src/gui.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/keynames.o: src/keynames.c include/adime.h include/adime/adimecfg.h
+obj/unix/adime/messbox.o: src/messbox.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/nan.o: src/nan.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/parsemod.o: src/parsemod.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/unix/adime/register.o: src/register.c include/adime.h include/adime/adimecfg.h
+obj/unix/adime/exanim.o: examples/exanim.c include/adime.h include/adime/adimecfg.h
+obj/unix/adime/exbutrow.o: examples/exbutrow.c include/adime.h include/adime/adimecfg.h
+obj/unix/adime/exchain.o: examples/exchain.c include/adime.h include/adime/adimecfg.h
+obj/unix/adime/exdialog.o: examples/exdialog.c include/adime.h include/adime/adimecfg.h
+obj/unix/adime/makechm.o: misc/makedoc/makechm.c misc/makedoc/makechm.h \
+  misc/makedoc/makehtml.h misc/makedoc/makemisc.h misc/makedoc/makedoc.h
+obj/unix/adime/makedevh.o: misc/makedoc/makedevh.c misc/makedoc/makedevh.h \
+  misc/makedoc/makehtml.h misc/makedoc/makemisc.h misc/makedoc/makechm.h \
+  misc/makedoc/makedoc.h
+obj/unix/adime/makedoc.o: misc/makedoc/makedoc.c misc/makedoc/makedoc.h \
+  misc/makedoc/makehtml.h misc/makedoc/makemisc.h misc/makedoc/maketxt.h \
+  misc/makedoc/makeman.h misc/makedoc/makertf.h misc/makedoc/maketexi.h \
+  misc/makedoc/makechm.h misc/makedoc/makedevh.h
+obj/unix/adime/makehtml.o: misc/makedoc/makehtml.c misc/makedoc/makehtml.h \
+  misc/makedoc/makemisc.h misc/makedoc/makedoc.h misc/makedoc/maketexi.h
+obj/unix/adime/makeman.o: misc/makedoc/makeman.c misc/makedoc/makeman.h \
+  misc/makedoc/makedoc.h misc/makedoc/makemisc.h
+obj/unix/adime/makemisc.o: misc/makedoc/makemisc.c misc/makedoc/makemisc.h
+obj/unix/adime/makertf.o: misc/makedoc/makertf.c misc/makedoc/makertf.h \
+  misc/makedoc/makedoc.h misc/makedoc/makemisc.h
+obj/unix/adime/maketexi.o: misc/makedoc/maketexi.c misc/makedoc/maketexi.h \
+  misc/makedoc/makertf.h misc/makedoc/makedoc.h misc/makedoc/makemisc.h
+obj/unix/adime/maketxt.o: misc/makedoc/maketxt.c misc/makedoc/maketxt.h \
+  misc/makedoc/makedoc.h misc/makedoc/makemisc.h

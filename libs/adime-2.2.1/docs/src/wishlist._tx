@@ -1,0 +1,131 @@
+@#
+@# This is the source for the Adime wish list file, in Allegro's custom format.
+@# Read allegro/docs/makedoc.c for a description of what is going on...
+@#
+@ignore_css
+@multiwordheaders
+@#locale=latin1
+@document_title=Adime - Wish List
+@html_footer=Back to Contents
+@rtfh=Adime Wish List
+@$\input texinfo
+@$@setfilename wishlist.inf
+@$@settitle Adime Wish List
+@$@setchapternewpage odd
+@$@paragraphindent 0
+@$@setchapternewpage off
+@# This should remain commented at the moment (dvi output) @$@finalout
+@$
+@$@ifinfo
+@$@direntry
+@$* Wish List: (wishlist). Adime Wish List
+@$@end direntry
+@$This is the Info version of the Adime Wish List file.
+@$
+@$By Sven Sandberg
+@$@end ifinfo
+@$
+@$@node Top, , (dir), (dir)
+@<pre>
+@!indent
+
+                              _      _ _
+                             /_\  __| (_)_ __  ___
+                            / _ \/ _` | | '  \/ -_)
+                           /_/ \_\__,_|_|_|_|_\___|
+
+                           Allegro Dialogs Made Easy
+
+                                   Wish List
+
+                               by Sven Sandberg
+
+
+@indent
+@</pre>
+
+@#!text
+@#heading
+@#Contents
+
+@#shortcontents
+
+
+
+@text
+@heading
+Wish List
+
+These are features that might be useful to add to Adime. However, I
+have very little time for working on Adime myself, and it has low
+priority for me. So if you want some feature, it's better to write it
+yourself and send a patch.
+<ul><li>
+   Write makefile for generic Unix, and for all future ports of
+   Allegro.
+<li>
+   Make all gui functions be function pointers so that the user can
+   hook the dialog procs and give them different looks.
+<li>
+   Datafiles should have an option for ability to select nothing.
+<li>
+   The following format specifiers:
+<ul><li>
+      %gridfloat, %cgridfloat,<br>
+      %griddouble, %cgriddouble,<br>
+      %gridint, %cgridint,<br>
+      %griduint, %cgriduint,<br>
+      %gridstring<br>
+         Lets the user edit a two dimensional grid of numbers/texts.
+<li>
+      %color<br>
+         A color. Next argument should be an `int *'.
+<li>
+      %color8<br>
+         A color in a palette. Next argument should be an `int *' (for
+         the color), and the argument after that should be an `RGB *'
+         for the palette, or `NULL' to use current palette.
+<li>
+      %slider[max]<br>
+         A slider control where the user can drag a handle to select
+         an integer. Next argument should be an `int *' in which the
+         result will be stored. `max' specifies the max value of the
+         slider, inclusive. Min value is always 0, inclusive.
+<li>
+      %radiolist[title,list]<br>
+      %radiovlist[title,list]<br>
+         Almost like %list/%vlist, but will display as a set of radio
+         buttons rather than as a list. Also, this doesn't take the
+         `lines' modifier that %list takes.
+</ul><li>
+   Automatic scroll bars if the window gets too high. Currently the
+   objects will just be invisible and unreachable which isn't exactly
+   beautiful.
+<li>
+   An example on using the "Adime Metrics" and "Adime Colors" to get a
+   different style.
+<li>
+   Currently, nested dialogs behave a bit weird when ok'ing a
+   sub-dialog and then cancelling a parent dialog: the sub-dialog will
+   continue being ok'ed. However, this is much harder to fix than it
+   may sound so I don't know if it's worth the effort.
+<li>
+   Movable windows. (Merge code from BGUI?)
+<li>
+   Make adime_dialogf() etc actually use our enhanced edit boxes -
+   just need a new adime_d_edit_proc().
+<li>
+   Make the %wstrlist, %wlist, %wdatafile formats look like a combo
+   box rather than being an own window.
+<li>
+   Write a better suited calculator?
+<li>
+   A completely new function that does the same as Allegro's
+   `alert()', but with automatic line breaking and with a format
+   string for the buttons would be useful to have.
+<li>
+   It would be nice to support generating chm docs with hhm,
+   (http://bonedaddy.net/pabs3/hhm/index.html) if/when
+   it can do that. This is the only part that has to be done with
+   non-free tools right now.
+</ul>

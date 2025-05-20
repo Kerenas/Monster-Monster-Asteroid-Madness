@@ -1,0 +1,49 @@
+@#
+@# This is the source for the Adime License file, in Allegro's custom format.
+@# Read misc/makedoc/makedoc.c for a description of what is going on...
+@#
+@# And don't read this file; read license.{txt|html|rtf} instead.
+@#
+@ignore_css
+@multiwordheaders
+@#locale=latin1
+@document_title=Adime - License
+@html_footer=Back to Contents
+@rtfh=Adime License
+@$\input texinfo
+@$@setfilename license.inf
+@$@settitle Adime License
+@$@setchapternewpage odd
+@$@paragraphindent 0
+@$
+@$@ifinfo
+@$@direntry
+@$* Adime License: (license). Adime License
+@$@end direntry
+@$This is the Info version of the Adime License
+@$
+@$By Sven Sandberg
+@$@end ifinfo
+@$
+@$@node Top, , (dir), (dir)
+Licence for Adime:
+
+Copyright (c) 2002 Sven Sandberg
+
+This software is provided 'as-is', without any express or implied warranty.
+In no event will the authors be held liable for any damages arising from the
+use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+1. The origin of this software must not be misrepresented; you must not claim
+that you wrote the original software. If you use this software in a product,
+an acknowledgment in the product documentation would be appreciated but is
+not required.
+
+2. Altered source versions must be plainly marked as such, and must not be
+misrepresented as being the original software.
+
+3. This notice may not be removed or altered from any source distribution.

@@ -1,0 +1,12 @@
+--- makefile.datogg	Thu Aug 15 07:30:54 2002
++++ makefile	Thu Aug 15 07:32:45 2002
+@@ -85,6 +85,9 @@
+ 
+ PLUGIN_LIB = lib/unix/libaldat.a
+ obj_unix_plugins_h = $(OBJDIR)/plugins.h
++
++# Link against Ogg/Vorbis libraries if using the datogg alogg plugin
++LIBS += -lalogg -lvorbisfile -lvorbisenc -lvorbis -logg -lm
+ 
+ default: $(DEFAULT_TARGETS)
+ 

@@ -1,0 +1,81 @@
+obj/watcom/adime/adialogf.o: src/adialogf.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/adime.o: src/adime.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/calcedit.o: src/calcedit.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/clipboar.o: src/clipboar.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/dbool.o: src/dbool.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/dbutrow.o: src/dbutrow.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/dbutton.o: src/dbutton.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/dchain.o: src/dchain.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/ddialogf.o: src/ddialogf.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/dfilenam.o: src/dfilenam.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/dfloat.o: src/dfloat.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/dgreybol.o: src/dgreybol.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/dinteger.o: src/dinteger.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/dline.o: src/dline.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/dlists.o: src/dlists.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/dnothing.o: src/dnothing.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/dpfloat.o: src/dpfloat.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/dpintege.o: src/dpintege.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/dstring.o: src/dstring.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/edit.o: src/edit.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/eval.o: src/eval.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/fortify.o: src/fortify.c
+obj/watcom/adime/fortify2.o: src/fortify2.c include/fortify2.h
+obj/watcom/adime/fsel.o: src/fsel.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/gui.o: src/gui.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/keynames.o: src/keynames.c include/adime.h include/adime/adimecfg.h
+obj/watcom/adime/messbox.o: src/messbox.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/nan.o: src/nan.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/parsemod.o: src/parsemod.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/watcom/adime/register.o: src/register.c include/adime.h include/adime/adimecfg.h
+obj/watcom/adime/exanim.o: examples/exanim.c include/adime.h include/adime/adimecfg.h
+obj/watcom/adime/exbutrow.o: examples/exbutrow.c include/adime.h include/adime/adimecfg.h
+obj/watcom/adime/exchain.o: examples/exchain.c include/adime.h include/adime/adimecfg.h
+obj/watcom/adime/exdialog.o: examples/exdialog.c include/adime.h include/adime/adimecfg.h
+obj/watcom/adime/makechm.o: misc/makedoc/makechm.c misc/makedoc/makechm.h \
+  misc/makedoc/makehtml.h misc/makedoc/makemisc.h misc/makedoc/makedoc.h
+obj/watcom/adime/makedevh.o: misc/makedoc/makedevh.c misc/makedoc/makedevh.h \
+  misc/makedoc/makehtml.h misc/makedoc/makemisc.h misc/makedoc/makechm.h \
+  misc/makedoc/makedoc.h
+obj/watcom/adime/makedoc.o: misc/makedoc/makedoc.c misc/makedoc/makedoc.h \
+  misc/makedoc/makehtml.h misc/makedoc/makemisc.h misc/makedoc/maketxt.h \
+  misc/makedoc/makeman.h misc/makedoc/makertf.h misc/makedoc/maketexi.h \
+  misc/makedoc/makechm.h misc/makedoc/makedevh.h
+obj/watcom/adime/makehtml.o: misc/makedoc/makehtml.c misc/makedoc/makehtml.h \
+  misc/makedoc/makemisc.h misc/makedoc/makedoc.h misc/makedoc/maketexi.h
+obj/watcom/adime/makeman.o: misc/makedoc/makeman.c misc/makedoc/makeman.h \
+  misc/makedoc/makedoc.h misc/makedoc/makemisc.h
+obj/watcom/adime/makemisc.o: misc/makedoc/makemisc.c misc/makedoc/makemisc.h
+obj/watcom/adime/makertf.o: misc/makedoc/makertf.c misc/makedoc/makertf.h \
+  misc/makedoc/makedoc.h misc/makedoc/makemisc.h
+obj/watcom/adime/maketexi.o: misc/makedoc/maketexi.c misc/makedoc/maketexi.h \
+  misc/makedoc/makertf.h misc/makedoc/makedoc.h misc/makedoc/makemisc.h
+obj/watcom/adime/maketxt.o: misc/makedoc/maketxt.c misc/makedoc/maketxt.h \
+  misc/makedoc/makedoc.h misc/makedoc/makemisc.h
+obj/watcom/adime/runner.o: misc/runner.c

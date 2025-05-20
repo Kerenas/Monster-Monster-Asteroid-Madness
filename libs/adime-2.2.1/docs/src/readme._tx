@@ -1,0 +1,170 @@
+@#
+@# This is the source for the Adime readme file, in Allegro's custom format.
+@# Read allegro/docs/makedoc.c for a description of what is going on...
+@#
+@ignore_css
+@multiwordheaders
+@#multiplefiles
+@#locale=latin1
+@document_title=Adime - Readme
+@html_footer=Back to Contents
+@rtfh=Readme for Adime
+@$\input texinfo
+@$@setfilename readme.inf
+@$@settitle Readme for Adime
+@$@setchapternewpage odd
+@$@paragraphindent 0
+@$@setchapternewpage off
+@# This should remain commented at the moment (dvi output) @$@finalout
+@$
+@$@ifinfo
+@$@direntry
+@$* Adime: (adime). Readme file for Adime
+@$@end direntry
+@$This is the Info version of the Adime readme file.
+@$
+@$By Sven Sandberg
+@$@end ifinfo
+@$
+@$@node Top, , (dir), (dir)
+@<pre>
+@!indent
+
+                              _      _ _
+                             /_\  __| (_)_ __  ___
+                            / _ \/ _` | | '  \/ -_)
+                           /_/ \_\__,_|_|_|_|_\___|
+
+                           Allegro Dialogs Made Easy
+@# note: version number patched by fixver.sh
+                                 Version 2.2.1
+
+                                    Readme
+
+                          http://adime.sourceforge.net/
+
+                               by Sven Sandberg
+
+
+@indent
+@</pre>
+
+@!text
+@heading
+Contents
+
+@shortcontents
+
+
+
+@text
+@heading
+Introduction
+
+Adime is a library for constructing Allegro gui dialogs in a way
+similar to scanf(), using a format string.  You only need one function
+call to create, e.g., a dialog where the user can enter an integer, a
+string, select a file, and select a string from a list.
+
+Other features include (customizable) 3d look and feel, 3d versions of
+some of Allegro's gui procs, complete help in many formats (html, txt,
+chm, texinfo, man, devhelp, rtf), and four example programs.
+
+Adime can currently be compiled on Linux, Windows/MinGW32,
+Windows/Borland C++, Windows/MSVC, DOS/DJGPP, DOS/Watcom, Apple MacOS
+X, and QNX.
+
+
+
+@heading
+Licence
+
+The zlib/libpng license: see license.txt for more information.
+
+You are also strongly encouraged to give away the source code of your
+program, but you do not have to do so.
+
+
+
+@heading
+Requirements
+
+You need to have installed and compiled Allegro
+(http://alleg.sf.net/). You need at least version 4.*.
+
+If you don't have a local copy of the Allegro library (e.g. because
+you deleted it to save some space after installation), then download
+the dimalleg.zip package from Adime's homepage. Unzip it to the same
+place where you unzipped Adime, then continue the installation as
+usually.
+
+
+
+@heading
+Installation
+
+See the file corresponding to your platform:
+<pre>
+   linux.txt
+   mingw32.txt
+   bcc32.txt
+   msvc.txt
+   djgpp.txt
+   watcom.txt
+   qnx.txt
+   macosx.txt
+</pre>
+These files are located in the docs/build/ directory.
+
+@heading
+Common Problems
+
+It is easy to give invalid arguments to `adime_dialogf()' by accident,
+and the error might not point out the source of the problem very
+well. Here is a checklist with the most common problems:
+<ul><li>
+"Everything crashes when I call `adime_dialogf()'."<br>
+   This is most likely caused by you passing one of the `...' arguments
+   from the wrong type.
+    - Check that all "%something[]" format specifiers match the correct type
+      of parameter. Remember that you must pass _pointers_ to integers and
+      floating point numbers, not just integers or floating point numbers.
+      Strings should be `char *', not `char **' though.
+    - If your format string spans several rows of your source, make sure
+      there isn't an extra comma in the end of one of those lines.
+   Also, the crash may not be a crash but rather an assertion that failed in
+   one of Adime's routines. If this is true, then an allegro.log file has
+   been created which describes the error. It usually means that there is
+   something wrong with your format string.
+<li>
+"All input fields in the dialog contain garbage by default."<br>
+    - You may have forgotten to initialize some of the variables before
+      passing their addresses to `adime_dialogf()'. The values of the `...'
+      parameters will be taken as default values in the input fields.
+    - If your format string spans several rows of your source, make sure
+      there isn't an extra comma in the end of one of those lines.
+<li>
+"The program shuts down and says that an assertion has been raised."<br>
+   Then your format string is wrong. An allegro.log file should have been
+   created, in which you find an error message that describes what your
+   mistake is.
+<li>
+"The program crashes horribly when I write a mathematically undefined
+expression (such as sqrt(-1)) or a very large expression (such as exp(1000))
+in the expression evaluator."<br>
+   As far as I know, this problem only occurs with Watcom (so let me know if
+   you are using another platform!) I don't know any easy way to fix it:
+   that's simply Watcom's horrible way of handling floating point exceptions.
+   Checking for errors before they occur is so hard that it's almost out of
+   the question (almost any mathematical operation can go wrong, e.g.
+   addition of big enough valid numbers results in overflow). The best
+   solution is that you switch to djgpp: it's a much better compiler anyway.
+</ul>
+
+
+@heading
+Contact Info
+
+See thanks.txt for email addresses to the developers.
+
+The homepage is at <tt>http://adime.sourceforge.net/</tt>

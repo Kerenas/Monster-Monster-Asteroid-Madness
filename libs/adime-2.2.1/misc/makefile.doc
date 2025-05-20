@@ -1,0 +1,44 @@
+#
+# helper makefile included from the native makefile to find makedoc.
+#
+# this is needed because the error message target (badmakedoc) is only
+# of any use if it's the first target of the makefile, so it can't be in
+# the main makefile after including the native one, because the native one
+# normally defines some targets. But it can't be before it either, because
+# it requires Allegro's directory to be set, which can only be done in a
+# platform-specific manner. It could be copied into the native makefile,
+# but doing it this way avoids code duplication.
+#
+
+.PHONY: badmakedoc
+
+ifeq ($(wildcard $(MAKEDOC_FILES)),$(MAKEDOC_FILES))
+  MAKEDOC_PROGRAM := misc/makedoc/makedoc$(EXE_SUFFIX)
+  MAKEDOC_DEP := misc/makedoc/makedoc$(EXE_SUFFIX)
+else
+  ifneq ($(wildcard $(ALLEGRODIR_U)/docs/makedoc$(EXE_SUFFIX)),)
+    MAKEDOC_PROGRAM := $(ALLEGRODIR_U)/docs/makedoc$(EXE_SUFFIX)
+    MAKEDOC_DEP :=
+  else
+    ifneq ($(wildcard $(ALLEGRODIR_U)/docs/src/makedoc$(EXE_SUFFIX)),)
+      MAKEDOC_PROGRAM := $(ALLEGRODIR_U)/docs/src/makedoc$(EXE_SUFFIX)
+      MAKEDOC_DEP :=
+    else
+      ifneq ($(wildcard $(ALLEGRODIR_U)/docs/src/makedoc/makedoc$(EXE_SUFFIX)),)
+        MAKEDOC_PROGRAM := $(ALLEGRODIR_U)/docs/src/makedoc/makedoc$(EXE_SUFFIX)
+        MAKEDOC_DEP :=
+      else
+        define BADMAKEDOC
+
+      Could not find Allegros makedoc utility.
+      Have you forgotten to make Allegro? You need to make Allegro, or at least
+      its documentation, before making Adime.
+      Alternatively, download the dimalleg.zip package from Adimes homepage.
+      See also readme.txt
+
+        endef
+        $(error $(BADMAKEDOC))
+      endif
+    endif
+  endif
+endif

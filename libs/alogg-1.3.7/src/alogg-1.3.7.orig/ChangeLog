@@ -1,0 +1,118 @@
+12 december 2005
+    alogg 1.3.7 released
+    alogg-config now use the right version of Allegro libs (static/shared)
+    fix the default streamer filling empty buffer with silence
+    updates to the alogg-config man page
+    more documentation notes about linking
+
+8 november 2005
+    alogg 1.3.6 released
+    alogg now compiles with Allegro 4.1.18 and 4.2.0
+    make the instructions for linking with alogg clearer
+    new shared and static options to alogg-config
+    some makefile improvements
+
+7 june 2004
+    alogg 1.3.5 released
+    alogg now compiles with Allegro 4.1.13
+    Fix a stupid bug in loading streams from PACKFILEs
+    Remove calls to set_volume_per_voice, leaving volume as default
+    Daniel Schlyder: fix for static link on Windows/MinGW32
+
+14 july 2003
+    alogg 1.3.4 released
+    alogg is now verified to work with Allegro 4.0.0
+    The datogg grabber plugin can now encode samples on the fly (from WAV, etc)
+    Add a new section to the manual for datogg
+    Add a selectable encoding quality dialog to datogg
+    Both alogg with and without Tremor support can be installed at the same time
+    Juraj Michalek: Fixes for compilation with GCC 3.2.3
+
+27 may 2003
+    alogg 1.3.3 released
+    The datogg grabber plugin now compiles with Tremor
+    alogg_stream now avoids cutting the stream too early when adding echo
+
+19 may 2003
+    alogg 1.3.2 released
+    Fix the encoder not setting the end of stream properly
+    The datogg grabber plugin can now stream Ogg/Vorbis streams off memory
+    Fix a rare overflow when Vorbis decoding returns more data than expected
+    alogg_encode now understands the -o option to set the output filename
+    DAT_OGG_VORBIS is now part of alogg's public interface
+
+3 february 2003
+    alogg 1.3.1 released
+    Alexandre Pineau: new man page for alogg-config
+    alogg-config is now installed with lib/headers
+    Various Makefile tweaks regarding installation
+
+3 december 2002
+    alogg 1.3.0 released
+    Threaded streaming support
+    alogg can now stream off a URL (HTTP, etc) using libcurl (experimental)
+    alogg can now be compiled as a shared library
+    License update to allow non distribution of object files
+    Comments can now be added to saved streams
+    alogg_encode can now be given a title for the encoded streams
+    alogg_stream now shows stream titles, with chaining support
+    Update includes location to newest Tremor snapshot
+    Eric Botcazou: Makefile fixes and improvements for DOS/Windows
+    Fix stream stopping and some occasional pop sounds
+    Optimize memory allocation when loading streams of unknown size
+    Update to compile with Allegro 4.1.4 and Allegro 4.1.6
+    Documentation fixes (replace < with &lt, add links for URLs, etc)
+    Eric Botcazou: new datogg.scm linker script for Mingw32
+
+12 september 2002
+    alogg 1.2.1 released
+    Read decoded data in the host endianness
+    datogg.scu and datogg.scr now included in the archive
+    Minor source improvements (extra parameter checks)
+
+10 september 2002
+    alogg 1.2.0 released
+    Tremor (fixed point version of the Ogg/Vorbis decoder) support
+    Eric Botcazou: Try to fix potential slash/backslash user mixup in Makefile
+    New datogg.scu/datogg.scr linker scripts
+    Miscellaneous Makefile improvements
+
+27 august 2002
+    alogg 1.1.0 released
+    New alogg-config script for helping compiling/linking with alogg
+    New defines (ALOGG_VERSION, etc) to ease building with different
+      versions of alogg
+    Reorganization of code between datogg and alogg
+    Add alogg_start_streaming_callbacks and alogg_create_sample
+    New alogg_dat example shows how to play/stream from a loaded datafile
+    Various documentation improvements
+
+22 august 2002
+    alogg 1.0.4 released
+    Mingw32 autodetection (which I had forgotten from Eric's previous patch)
+    Various documentation improvements
+    cleanup in datogg.c (old naming was left for datogg_get_info)
+    The input buffer for encoding is now const
+
+21 august 2002
+    alogg 1.0.3 released
+    alogg_stream now shows how to use manual streaming to add echo
+    Eric Botcazou: Makefile support for Mingw32, Makefile improvements
+    Eric Botcazou: use USE_CONSOLE (needed for Windows)
+    Eric Botcazou: spotted useless hunk in libs.diff
+    ChangeLog now states which versions corresponds to which release date
+    Documentation fix for alogg_exit
+
+20 august 2002
+    alogg 1.0.2 released
+    alogg should now play stereo files fine
+    Fix detection of register_sample_file_type in the Makefile
+      (I had broken it when trying to make it work for DOS)
+
+18 august 2002
+    alogg 1.0.1 released
+    Eric Botcazou: Fixes for compilation with DJGPP and Allegro 4
+    Makefile changes to bring alogg closer to compilation on DJGPP
+
+14 August 2002
+    alogg 1.0.0 released

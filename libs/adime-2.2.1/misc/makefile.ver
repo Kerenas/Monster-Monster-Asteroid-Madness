@@ -1,0 +1,10 @@
+# version numbers included by the main makefile
+# this file is patched by fixver.sh
+
+# DLL filename number for Windows
+LIB_VERSION = 22
+
+# Shared library versions for Unix
+# todo: this is unused at the moment
+shared_version = 2.2.1
+shared_major_minor = 2.2

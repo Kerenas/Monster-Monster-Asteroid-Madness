@@ -1,0 +1,13 @@
+--- allegro-4.1.1-v2-old/makefile	Thu Aug 29 20:36:58 2002
++++ allegro-4.1.1-v2/makefile	Sun Sep  8 21:50:54 2002
+@@ -88,6 +88,10 @@
+ PLUGIN_LIB = lib/unix/libaldat.a
+ obj_unix_plugins_h = $(OBJDIR)/plugins.h
+ 
++# Link against Ogg/Vorbis libraries if using the datogg alogg plugin
++LIBS += -laloggt -lvorbisidec
++CFLAGS += -DALOGG_USE_TREMOR
++
+ default: $(DEFAULT_TARGETS)
+ 
+ .SUFFIXES:
