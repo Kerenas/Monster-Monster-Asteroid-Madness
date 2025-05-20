@@ -1,0 +1,107 @@
+@#
+@# This is the source for the file describing how to upgrade from
+@# Dime to Adime, in Allegro's custom format.
+@# Read allegro/docs/makedoc.c for a description of what is going on...
+@#
+@ignore_css
+@multiwordheaders
+@#multiplefiles
+@#locale=latin1
+@document_title=Upgrading from Dime to Adime
+@html_footer=Back to Contents
+@rtfh=Upgrading from Dime to Adime
+@$\input texinfo
+@$@setfilename dime.inf
+@$@settitle Upgrading from Dime to Adime
+@$@setchapternewpage odd
+@$@paragraphindent 0
+@$@setchapternewpage off
+@# This should remain commented at the moment (dvi output) @$@finalout
+@$
+@$@ifinfo
+@$@direntry
+@$* Dime: (dime). How to upgrade from Dime to Adime
+@$@end direntry
+@$This is the Info version of the Adime upgrading file.
+@$
+@$By Sven Sandberg
+@$@end ifinfo
+@$
+@$@node Top, , (dir), (dir)
+@<pre>
+@!indent
+
+                              _      _ _
+                             /_\  __| (_)_ __  ___
+                            / _ \/ _` | | '  \/ -_)
+                           /_/ \_\__,_|_|_|_|_\___|
+
+                           Allegro Dialogs Made Easy
+@# note: version number patched by fixver.sh
+
+                          Upgrading from Dime to Adime
+
+                          http://adime.sourceforge.net/
+
+                               by Sven Sandberg
+
+
+@indent
+@</pre>
+
+@heading
+What's This?
+
+This file describes in detail everything you may need to do in order
+to upgrade a program written for Dime 1.2.4 or earlier, so that it
+uses Adime 2.0.0 or later.
+
+The reason why I decided to prefix functions is that this is good
+coding practice: It avoids potential conflicts with other libraries
+that use the same identifier names. The reason why I had to change the
+name of the library from Dime to Adime is that there is another
+library called Dime (which is bigger and has been around longer) so it
+caused a conflict.
+
+
+
+@heading
+How to Upgrade a Program
+
+First replace `#include &ltdime.h&gt' by `#include &ltadime.h&gt' in all your
+source files.
+
+The most obvious difference now is that all identifiers are prefixed
+with `adime_'. You will get compiler errors, and the fix is usually
+obvious. But there are a couple of subtle differences that you may
+encounter:
+
+"%bool[]": This now uses 0 for off and 1 for on. It used to be nonzero
+for on, but passing anything else than 0 or 1 is now an error.
+
+"%filename[]" and "%string[]": These used to require a modifier
+specifying the maximum number of characters in the string. This has
+been changed: it now specifies the maximum number of bytes that these
+characters may occupy. These numbers are different in general because
+a Unicode character can occupy more than one byte.
+
+`vdialogf()' and "%vdialogf[]": These now take an `adime_va_list' as
+parameter instead of a `va_list'. An `adime_va_list' is just like a
+`va_list', but is represented in a way that is more convenient for
+Adime.  You can use `adime_va_start()', `adime_va_arg()', and
+`adime_va_end()' just like you use `va_start()', `va_arg()', and
+`va_end()', except for one difference: If you pass an `adime_va_list'
+to another function, and this function reads from it using
+`adime_va_arg()', then the position to read from will have advanced
+also in the calling function.
+
+The internal way of defining a format has changed, so if you were
+doing this yourself you need to rewrite parts of the code. This is
+considered advanced though, so read internal.txt.
+
+You may also want to uninstall Dime. You can do this by running "make
+uninstall" from Dime's (not Adime's!) directory. You can also do it
+manually by removing the files libdime.a and libdimed.a from your
+system's library directory, dime.h and dime/*.h from your system's
+include directory.  Under djgpp you also need to remove
+djgpp/info/dime.inf or djgpp/info/dime.info.

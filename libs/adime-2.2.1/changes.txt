@@ -1,0 +1,216 @@
+
+                              _      _ _
+                             /_\  __| (_)_ __  ___
+                            / _ \/ _` | | '  \/ -_)
+                           /_/ \_\__,_|_|_|_|_\___|
+
+                           Allegro Dialogs Made Easy
+
+                                   Changes
+
+                               by Sven Sandberg
+
+
+
+
+
+=================================
+============ Changes ============
+=================================
+
+From Adime 2.2.0 to 2.2.1:
+
+   Adjusted to Allegro's new prototype for _add_exit_func().
+
+   Fixed issue in MSVC's makefile.
+
+
+From Adime 2.0.0 to 2.2.0:
+
+   Stijn Wolters ported Adime to Mac OS X. The port features
+   installation as framework and template for ProjectBuilder
+   and XCode.
+
+
+From Dime 1.9.1 to Adime 2.0.0:
+
+   Changed the name of the library from Dime to Adime. This was
+   necessary because it appeared that a library called Dime already
+   exists, is shipped with Debian and installs a libdime.a file.
+
+   Eric Botcazou wrote a Borland C++ port _and_ a QNX port. He also
+   fixed several problems in the build process for MinGW32 and MSVC.
+
+   Changed licence to the zlib/libpng licence, after Peter Wang
+   convinced me that it's much easier to understand. LGPL is very long
+   and complicated, and contains some subtle points that are likely to
+   make life harder for users.
+
+   Arranged generated documentation in subdirectories of the docs dir,
+   according to the format. Also shipped makedoc with the distribution
+   to make it self-contained.
+
+   %string[] and %filename[] now take bytes as the string length, not
+   characters. This is much safer, because it is normally the buffer
+   length that you want to specify.
+
+   `adime_d_edit_proc()' now understands negative values of d->d1 as
+   maximum length in bytes.
+
+   Added `adime_window_visible' flag, which you can use to hide the
+   background window.
+
+   Added %buttonrow[] format which allows you to have more buttons
+   than just ok and cancel in a dialog. Also wrote an example,
+   exbutrow.
+
+   Added %button[] format.
+
+   Fixed bug in %dialogf[] which didn't properly reset the dialog when
+   you reopened after ok'ing it.
+
+   All files are now indented using only spaces.
+
+   dlls may now be binary compatible between versions, because
+   fixdll.sh tries to do the same thing as Allegro's fixdll.sh, but I
+   don't know very much on the issue so I can't tell for sure.
+
+   Added man, chm and devhelp versions of the documentation. Something
+   is wrong with the dvi version; otherwise we would also have dvi,
+   ps, ps.gz and pdf versions.
+
+
+From 1.2.4 to 1.9.1:
+
+   Renamed almost all functions. All names are now prefixed with `dime_' (or
+   `_dime_' for internals, or `DIME_' for macros, etc.). This means that any
+   old code using Dime will almost certainly be broken. I'm very sorry for
+   this, but it's a one-time-only change and it is much nicer not to pollute
+   the namespace so much. There is a compatibility header, dime/dimecomp.h,
+   which you can use until you have updated your code.
+
+   Const-ified the whole library.
+
+   Made it possible to compile Dime even if there is no local copy of the
+   Allegro tree available. You just need to get dimalleg.zip utility from the
+   homepage, and Dime's makefile magically does the rest for you.
+
+   Made %filename[] take second argument as the number of bytes rather than
+   the number of characters used. I hope this doesn't break any code.
+
+   Changed `dime_d_button_proc()' to be able to call a user-specified
+   callback. This might break your code if you were using it.
+
+   Fixed bug causing the dialog not to be correctly centered when only
+   %nothing[] or %line[] was used.
+
+   Added this entry in the changelog.
+
+   Wrote `dime_file_select()': a 3d version of Allegro's file selector.
+
+   Fixed some bugs that ought to have made the gui procs unusable except when
+   used internally by `dime_dialogf()'.
+
+   Added `dime_d_list_proc()'.
+
+   Made the window title look better, added some color variables that you can
+   use to control this, and added `dime_d_window_proc()'.
+
+   Fixed bug in `dime_fill_textout()' causing one scanline too much to be
+   drawn.
+
+   Fixed bug not restoring text_mode in some cases.
+
+   Rewrote the inner workings of `dime_dialogf()' to be cleaner and more
+   flexible, so that the new %chain[] format could be added.
+
+   Removed some stupid limitations on the length of various strings.
+
+
+From 1.2.2 to 1.2.4:
+
+   Fixed bug causing make to fail with Allegro version >= 3.9.40. Thanks to
+   Eric Botcazou for pointing this out only hours after 1.2.2 was released!
+
+   Replaced fixdjgpp.bat, fixming.bat etc by a single fix.sh and fix.bat.
+
+   Fixed compilation problem with gcc 3.* (at least 3.02 for djgpp). Note
+   that you should _not_ use 3.02 because it has a bug that generates bad
+   code.
+
+   Made version numbering consistent (major.minor.patch, where minor is even
+   for releases and odd for unstable working versions).
+
+
+From 1.2.1 to 1.2.2:
+
+   Fixed bug making "%vlist[x]" crash when x > [size of list].
+
+   Fixed bug causing "make depend" to fail.
+
+   Changed the license: Dime is now distributed under the conditions of
+   the GNU Lesser General Public License, LGPL.
+
+
+From 1.2.1b to 1.2.1:
+
+   Added exanim: an example on how to animate in the background while a
+   dialog is open.
+
+   Renamed "%strlist[]" to "%vlist[]". Sorry if I broke any code, but I
+   figured Dime is still so young that it won't hurt too much, and the name
+   is much more logical. I promise not to do this again unless it's
+   absolutely necessary :-)
+
+   Fixed bugs in the example program.
+
+   Fixed bug in the documentation for `dialogf_callback()' and made it be
+   called even when a file selector is open.
+
+   Made the expression evaluator understand exponents.
+
+   Mike Greubel provided a winhelp version of the documentation (which is
+   available as a separate archive from Dime's homepage) and drew a nice
+   logotype.
+
+   Improved some error messages and the Common Problems section of readme.
+
+   Split readme into readme, changes and wishlist, and made expressi.txt be
+   generated by the makefile.
+
+
+From 1.2b to 1.2.1b:
+
+   Fixed a bug in makefile.mgw.
+
+   Actually included the new example program in the distribution.
+
+
+From 1.1.1b to 1.2b:
+
+   Fixed a bug not restoring text background color in some cases.
+
+   Made the info format documentation install itself to common directories
+   under djgpp.
+
+   Improved the example program.
+
+   Peter Wang contributed a Linux port.
+
+   Made the statically linked version of Dime link with Allegro statically.
+   (Thanks to Mike Fahlbusch who pointed this out!)
+
+
+From 1.1b to 1.1.1b:
+
+   Removed a bug that prevented the whole thing from building on other
+   machines than mine.
+
+
+From 1.0 to 1.1b:
+
+   No actual changes, really. But 1.0 should have been 1.0 beta, so I
+   released 1.1b to make it a beta :-) . Also fixed some version errors in
+   the documentation and in dime.h.
+
+

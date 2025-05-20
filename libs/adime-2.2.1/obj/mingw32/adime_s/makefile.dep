@@ -1,0 +1,80 @@
+obj/mingw32/adime_s/adialogf.o: src/adialogf.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/adime.o: src/adime.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/calcedit.o: src/calcedit.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/clipboar.o: src/clipboar.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/dbool.o: src/dbool.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/dbutrow.o: src/dbutrow.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/dbutton.o: src/dbutton.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/dchain.o: src/dchain.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/ddialogf.o: src/ddialogf.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/dfilenam.o: src/dfilenam.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/dfloat.o: src/dfloat.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/dgreybol.o: src/dgreybol.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/dinteger.o: src/dinteger.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/dline.o: src/dline.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/dlists.o: src/dlists.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/dnothing.o: src/dnothing.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/dpfloat.o: src/dpfloat.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/dpintege.o: src/dpintege.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/dstring.o: src/dstring.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/edit.o: src/edit.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/eval.o: src/eval.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/fortify.o: src/fortify.c
+obj/mingw32/adime_s/fortify2.o: src/fortify2.c include/fortify2.h
+obj/mingw32/adime_s/fsel.o: src/fsel.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/gui.o: src/gui.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/keynames.o: src/keynames.c include/adime.h include/adime/adimecfg.h
+obj/mingw32/adime_s/messbox.o: src/messbox.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/nan.o: src/nan.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/parsemod.o: src/parsemod.c include/adime.h include/adime/adimecfg.h \
+  include/adime/adimeint.h
+obj/mingw32/adime_s/register.o: src/register.c include/adime.h include/adime/adimecfg.h
+obj/mingw32/adime_s/exanim.o: examples/exanim.c include/adime.h include/adime/adimecfg.h
+obj/mingw32/adime_s/exbutrow.o: examples/exbutrow.c include/adime.h include/adime/adimecfg.h
+obj/mingw32/adime_s/exchain.o: examples/exchain.c include/adime.h include/adime/adimecfg.h
+obj/mingw32/adime_s/exdialog.o: examples/exdialog.c include/adime.h include/adime/adimecfg.h
+obj/mingw32/adime_s/makechm.o: misc/makedoc/makechm.c misc/makedoc/makechm.h \
+  misc/makedoc/makehtml.h misc/makedoc/makemisc.h misc/makedoc/makedoc.h
+obj/mingw32/adime_s/makedevh.o: misc/makedoc/makedevh.c misc/makedoc/makedevh.h \
+  misc/makedoc/makehtml.h misc/makedoc/makemisc.h misc/makedoc/makechm.h \
+  misc/makedoc/makedoc.h
+obj/mingw32/adime_s/makedoc.o: misc/makedoc/makedoc.c misc/makedoc/makedoc.h \
+  misc/makedoc/makehtml.h misc/makedoc/makemisc.h misc/makedoc/maketxt.h \
+  misc/makedoc/makeman.h misc/makedoc/makertf.h misc/makedoc/maketexi.h \
+  misc/makedoc/makechm.h misc/makedoc/makedevh.h
+obj/mingw32/adime_s/makehtml.o: misc/makedoc/makehtml.c misc/makedoc/makehtml.h \
+  misc/makedoc/makemisc.h misc/makedoc/makedoc.h misc/makedoc/maketexi.h
+obj/mingw32/adime_s/makeman.o: misc/makedoc/makeman.c misc/makedoc/makeman.h \
+  misc/makedoc/makedoc.h misc/makedoc/makemisc.h
+obj/mingw32/adime_s/makemisc.o: misc/makedoc/makemisc.c misc/makedoc/makemisc.h
+obj/mingw32/adime_s/makertf.o: misc/makedoc/makertf.c misc/makedoc/makertf.h \
+  misc/makedoc/makedoc.h misc/makedoc/makemisc.h
+obj/mingw32/adime_s/maketexi.o: misc/makedoc/maketexi.c misc/makedoc/maketexi.h \
+  misc/makedoc/makertf.h misc/makedoc/makedoc.h misc/makedoc/makemisc.h
+obj/mingw32/adime_s/maketxt.o: misc/makedoc/maketxt.c misc/makedoc/maketxt.h \
+  misc/makedoc/makedoc.h misc/makedoc/makemisc.h

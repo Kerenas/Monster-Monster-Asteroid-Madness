@@ -1,0 +1,447 @@
+#     _      _ _
+#    /_\  __| (_)_ __  ___
+#   / _ \/ _` | | '  \/ -_)
+#  /_/ \_\__,_|_|_|_|_\___|
+#
+#  makefile.vc:
+#  Makefile for the Adime library with MSVC. Should not be used directly!
+#
+#  By Sven Sandberg
+#
+#  See readme.txt for more information about Adime.
+#
+#  See makefile.all for a list of the available targets.
+#
+#
+#  To path MSVC so it can be used from the commandline, run the
+#  vcvars32.bat file which can be found in your MSVC bin directory.
+#
+#  This build uses djgpp for building the assembler sources and calculating
+#  source dependencies, so you'll need to have that installed as well.
+#
+#  The "depend" target uses sed.
+
+
+
+# -------- define some variables that the primary makefile will use --------
+
+PLATFORM = MSVC
+
+EXE_SUFFIX = .exe
+OBJ_SUFFIX = .obj
+LIB_SUFFIX = .lib
+HTML_SUFFIX = .html
+INFO_SUFFIX = .info
+TEXI_SUFFIX = .texi
+
+_TX_HTML_FLAG = -html
+_TX_TEXI_FLAG = -texi
+
+ifndef OBJ_ROOT_DIR
+OBJ_ROOT_DIR = obj
+OBJ_ROOT_DIR_D = obj
+endif
+OBJ_PLATFORM_ROOT_DIR = $(OBJ_ROOT_DIR)/msvc
+OBJ_PLATFORM_ROOT_DIR_D = $(OBJ_ROOT_DIR_D)\msvc
+
+ifndef LIB_ROOT_DIR
+LIB_ROOT_DIR = lib
+LIB_ROOT_DIR_D = lib
+endif
+LIB_DIR = $(LIB_ROOT_DIR)/msvc
+LIB_DIR_D = $(LIB_ROOT_DIR)\msvc
+
+
+ifdef STATICLINK
+
+# link as a static library
+OBJ_DIR = $(OBJ_PLATFORM_ROOT_DIR)/$(PACKAGE5)_s
+OBJ_DIR_D = $(OBJ_PLATFORM_ROOT_DIR_D)\$(PACKAGE5)_s
+IMPLIB_BASENAME = $(PACKAGE5)_s$(LIB_SUFFIX)
+IMPLIB_NAME = $(LIB_DIR)/$(IMPLIB_BASENAME)
+LIB_NAME = $(IMPLIB_NAME)
+
+else
+
+# link as a DLL
+OBJ_DIR = $(OBJ_PLATFORM_ROOT_DIR)/$(PACKAGE5)
+OBJ_DIR_D = $(OBJ_PLATFORM_ROOT_DIR_D)\$(PACKAGE5)
+DLL_BASENAME = $(PACKAGE4)$(LIB_VERSION).dll
+DLL_NAME = $(LIB_DIR)/$(DLL_BASENAME)
+IMPLIB_BASENAME = $(PACKAGE4)$(LIB_SUFFIX)
+IMPLIB_NAME = $(LIB_DIR)/$(IMPLIB_BASENAME)
+LIB_NAME = $(DLL_NAME) $(IMPLIB_NAME)
+EXPDEF_NAME = $(LIB_DIR)/adime.def
+
+endif
+
+
+
+# -------- Check that environment path variables are set. --------
+
+ifeq ($(OS),Windows_NT)
+  WINSYSDIR = $(SYSTEMROOT)
+  ifeq ($(WINSYSDIR),)
+    WINSYSDIR = $(SystemRoot)
+  endif
+  WINSUBDIR = system32
+else
+  WINSYSDIR = $(WINDIR)
+  ifeq ($(WINSYSDIR),)
+    WINSYSDIR = $(windir)
+  endif
+  WINSUBDIR = system
+endif
+
+ifeq ($(WINSYSDIR),)
+  ifndef CROSSCOMPILE
+    define BADWIN
+
+      ERROR:
+      Your SYSTEMROOT or windir environment variable is not set!
+
+    endef
+    $(error $(BADWIN))
+  endif
+endif
+
+WINDIR_U = $(subst \,/,$(WINSYSDIR)/$(WINSUBDIR))
+WINDIR_D = $(subst /,\,$(WINSYSDIR)/$(WINSUBDIR))
+
+ifdef MSVCDIR
+MSVCDIR_U = $(subst \,/,$(MSVCDIR))
+MSVCDIR_D = $(subst /,\,$(MSVCDIR))
+else
+ifdef MSDEVDIR
+MSVCDIR_U = $(subst \,/,$(MSDEVDIR))
+MSVCDIR_D = $(subst /,\,$(MSDEVDIR))
+endif
+endif
+
+ifeq ($(MSVCDIR_U),)
+  ifndef CROSSCOMPILE
+    define BADMSVC
+
+      ERROR:
+      Your MSVCDIR or MSDEVDIR environment variable is not set!
+
+    endef
+    $(error $(BADMSVC))
+  endif
+endif
+
+NULLSTRING :=
+SPACE := $(NULLSTRING) # special magic to get an isolated space character
+
+ifneq ($(findstring $(SPACE),$(MSVCDIR)$(MSDEVDIR)),)
+  ifndef CROSSCOMPILE
+    define BADSPACES
+
+      ERROR:
+      There are spaces in your MSVCDIR or MSDEVDIR environment
+      variables: please change these to the 8.3 short filename
+      version, or move your compiler to a different directory.
+
+    endef
+    $(error $(BADSPACES))
+  endif
+endif
+
+SYSTEM_INCLUDE_DIR = $(MSVCDIR_U)/include
+SYSTEM_INCLUDE_DIR_D = $(MSVCDIR_D)\include
+SYSTEM_LIB_DIR = $(MSVCDIR_U)/lib
+SYSTEM_LIB_DIR_D = $(MSVCDIR_D)\lib
+
+
+
+# -------- Find Allegro, runner and makedoc. --------
+
+ifndef NEED_ALLEGRO
+  ifdef NEED_MAKEDOC
+    ifeq ($(wildcard $(MAKEDOC_SOURCE)),)
+      NEED_ALLEGRO = 1
+    endif
+  endif
+  ifeq ($(wildcard $(RUNNER_SOURCE)),)
+    NEED_ALLEGRO = 1
+  endif
+endif
+
+ifdef NEED_ALLEGRO
+  ifndef ALLEGRO
+    define BADALLEGRO
+
+      ERROR:
+      Could not find Allegro!
+      Is your ALLEGRO environment variable set correctly? It should
+      point to the place where Allegro lives, e.g. c:\allegro. Run
+        make ALLEGRO=c:\allegro
+      (or whatever the location of Allegro is).
+      See also readme.txt,
+
+    endef
+    $(error $(BADALLEGRO))
+  endif
+  ALLEGRODIR_U = $(subst \,/,$(ALLEGRO))
+endif
+
+
+ifneq ($(wildcard $(RUNNER_SOURCE)),)
+  RUNNER := obj/msvc/runner.exe
+  RUNNER_DEP := obj/msvc/runner.exe
+  define COMPILE_RUNNER
+    gcc -O -Wall -Werror -o $(RUNNER) $(RUNNER_SOURCE)
+  endef
+else
+  RUNNER := $(wildcard $(ALLEGRODIR_U)/obj/msvc/runner.exe)
+  RUNNER_DEP :=
+endif
+
+ifeq ($(RUNNER),)
+  ifndef CROSSCOMPILE
+    define BADRUNNER
+
+      ERROR:
+      Could not find Allegros runner utility.
+      Have you forgotten to make Allegro? You need to make the MSVC version of
+      Allegro before making the MSVC version of Adime.
+
+    endef
+    $(error $(BADRUNNER))
+  endif
+endif
+
+
+ifdef NEED_MAKEDOC
+include misc/makefile.doc
+endif
+
+
+
+# -------- decide what compiler options to use --------
+
+ifdef WARNMODE
+WFLAGS = -W3 -WX
+else
+WFLAGS = -W1
+endif
+
+ifdef DEBUGMODE
+# -------- debugging build --------
+CFLAGS = -DDEBUGMODE=$(DEBUGMODE) $(WFLAGS) -Gd -Zi -MTd
+SFLAGS = -DDEBUGMODE=$(DEBUGMODE) -Wall
+LFLAGS = -debug -debugtype:cv
+ifdef STATICLINK_ALLEGRO
+LIB_FLAGS = alld_s.lib
+else
+LIB_FLAGS = alld.lib
+endif
+else
+ifdef PROFILEMODE
+# -------- profiling build --------
+CFLAGS = $(WFLAGS) -Gd -Ox -GB -MT
+SFLAGS = -Wall
+LFLAGS = -profile
+ifdef STATICLINK_ALLEGRO
+LIB_FLAGS = allp_s.lib
+else
+LIB_FLAGS = allp.lib
+endif
+else
+# -------- optimised build --------
+CFLAGS = $(WFLAGS) -Gd -Ox -GB -MT
+SFLAGS = -Wall
+LFLAGS = -release
+ifdef STATICLINK_ALLEGRO
+LIB_FLAGS = alleg_s.lib
+else
+LIB_FLAGS = alleg.lib
+endif
+endif
+endif
+
+ifdef ADIME_DEVELOPING
+CFLAGS += -D_ADIME_DEVELOPING=1
+endif
+ifdef ADIME_FORTIFY
+CFLAGS += -D_ADIME_FORTIFY=1 -DFORTIFY
+endif
+
+CFLAGS_NO_OPTIMIZE = $(WFLAGS) -Gd -MT
+
+COMPILE_FLAGS = $(subst src/,-DADIME_SRC ,$(findstring src/, $<))$(CFLAGS)
+COMPILE_FLAGS_NO_OPTIMIZE = $(subst src/,-DADIME_SRC ,$(findstring src/, $<))$(CFLAGS_NO_OPTIMIZE)
+
+ifdef STATICLINK
+COMPILE_FLAGS += -DADIME_STATICLINK
+endif
+
+LIB_FLAGS += kernel32.lib user32.lib gdi32.lib comdlg32.lib ole32.lib \
+ dinput.lib ddraw.lib dxguid.lib winmm.lib dsound.lib
+
+
+
+# -------- List platform specific objects and programs. --------
+
+VPATH +=
+
+OBJ_LIST = $(COMMON_OBJS)
+
+# Insert names of targets to build platform specific programs here.
+PROGRAMS =
+# Insert targets to build platform specific programs here.
+# myprogram: path/myprogram$(EXE_SUFFIX)
+
+
+
+# -------- Define how to compile. --------
+
+GCC2MSVC = -D_MSC_VER -D_WIN32 -D_M_IX86 -U__GNUC__ -UDJGPP -U__unix__
+
+COMPILE_C_TO_OBJ_DEPS = $(RUNNER_DEP)
+define COMPILE_C_TO_OBJ
+$(RUNNER) cl @ -nologo $(COMPILE_FLAGS) -I./include -Fo$@ -c $<
+endef
+define COMPILE_C_TO_OBJ_NO_OPTIMIZE
+$(RUNNER) cl @ -nologo $(COMPILE_FLAGS_NO_OPTIMIZE) -I./include -Fo$@ -c $<
+endef
+
+COMPILE_S_TO_OBJ_DEPS = $(RUNNER_DEP)
+define COMPILE_S_TO_OBJ
+gcc $(GCC2MSVC) $(SFLAGS) -I./include -x assembler-with-cpp -o $@ -c $<
+endef
+
+LINK_EXE_DEPS = $(RUNNER_DEP)
+define LINK_EXE
+$(RUNNER) link @ -nologo $(LFLAGS) -subsystem:windows -out:$@ $< $(IMPLIB_NAME) $(LIB_FLAGS)
+endef
+
+LINK_EXE_NOLIB_DEPS = $(RUNNER_DEP)
+define LINK_EXE_NOLIB
+$(RUNNER) link @ -nologo $(LFLAGS) -subsystem:windows -out:$@ $< $(LIB_FLAGS)
+endef
+
+LINK_EXE_ALL_DEPS = $(RUNNER_DEP)
+define LINK_EXE_ALL
+$(RUNNER) link @ -nologo $(LFLAGS) -subsystem:windows -out:$@ $(filter-out $(RUNNER_DEP),$^) $(IMPLIB_NAME) $(LIB_FLAGS)
+endef
+
+LINK_EXE_ALL_NOLIB_DEPS = $(RUNNER_DEP)
+define LINK_EXE_ALL_NOLIB
+$(RUNNER) link @ -nologo $(LFLAGS) -subsystem:windows -out:$@ $(filter-out $(RUNNER_DEP),$^) $(LIB_FLAGS)
+endef
+
+LINK_EXE_CONSOLE_DEPS = $(IMPLIB_NAME) $(RUNNER_DEP)
+define LINK_EXE_CONSOLE
+$(RUNNER) link @ -nologo $(LFLAGS) -subsystem:console -out:$@ $< $(IMPLIB_NAME) $(LIB_FLAGS)
+endef
+
+LINK_EXE_CONSOLE_NOLIB_DEPS = $(RUNNER_DEP)
+define LINK_EXE_CONSOLE_NOLIB
+$(RUNNER) link @ -nologo $(LFLAGS) -subsystem:console -out:$@ $< $(LIB_FLAGS)
+endef
+
+ifdef STATICLINK
+# link as a static library
+
+LINK_LIB_DEPS = $(RUNNER_DEP)
+define LINK_LIB
+$(RUNNER) lib @ -nologo -out:$(LIB_NAME) $(LIB_OBJS)
+endef
+
+else
+# link as a DLL
+
+LINK_LIB_DEPS = $(RUNNER_DEP)
+define LINK_LIB
+$(RUNNER) link @ -nologo $(LFLAGS) -dll -def:$(EXPDEF_NAME) -out:$(DLL_NAME) -implib:$(IMPLIB_NAME) $(LIB_OBJS) $(LIB_FLAGS)
+endef
+
+endif # ifdef STATICLINK
+
+
+
+# -------- Rules for installing and removing the library files. --------
+
+ifneq ($(wildcard $(DJDIR)/bin/cp.exe),)
+HAVE_CP = 1
+endif
+
+ifndef STATICLINK
+$(WINDIR_U)/$(DLL_BASENAME): $(DLL_NAME)
+ifdef HAVE_CP
+	$(DJDIR)/bin/cp $(subst \,/,$< $@)
+else
+	copy $(subst /,\,$< $@)
+endif
+endif
+
+$(SYSTEM_LIB_DIR)/$(IMPLIB_BASENAME): $(IMPLIB_NAME)
+ifdef HAVE_CP
+	$(DJDIR)/bin/cp $(subst \,/,$< $@)
+else
+	copy $(subst /,\,$< $@)
+endif
+
+$(SYSTEM_INCLUDE_DIR)/adime.h: include/adime.h
+ifdef HAVE_CP
+	$(DJDIR)/bin/cp $(subst \,/,$< $@)
+else
+	copy $(subst /,\,$< $@)
+endif
+
+$(SYSTEM_INCLUDE_DIR)/adime:
+	md $(subst /,\,$@)
+
+$(SYSTEM_INCLUDE_DIR)/adime/%.h: include/adime/%.h include/adime
+ifdef HAVE_CP
+	$(DJDIR)/bin/cp $(subst \,/,$< $@)
+else
+	copy $(subst /,\,$< $@)
+endif
+
+
+INSTALL_HEADERS = $(addprefix $(MSVCDIR_U)/,$(wildcard include/adime/*.h))
+
+INSTALL_FILES = $(SYSTEM_LIB_DIR)/$(IMPLIB_BASENAME) \
+ $(SYSTEM_INCLUDE_DIR)/adime.h \
+ $(SYSTEM_INCLUDE_DIR)/adime \
+ $(INSTALL_HEADERS)
+
+ifndef STATICLINK
+INSTALL_FILES += $(WINDIR_U)/$(DLL_BASENAME)
+endif
+
+install: $(INSTALL_FILES)
+	@echo The $(DESCRIPTION) MSVC library has been installed.
+
+UNINSTALL_FILES = \
+ $(SYSTEM_LIB_DIR)/adime.lib $(SYSTEM_LIB_DIR)/adime_s.lib \
+ $(SYSTEM_LIB_DIR)/adimd.lib $(SYSTEM_LIB_DIR)/adimd_s.lib \
+ $(SYSTEM_INCLUDE_DIR)/adime.h $(SYSTEM_INCLUDE_DIR)/adime/*.h \
+ $(WINDIR_U)/adime$(LIB_VERSION).dll $(WINDIR_U)/adid$(LIB_VERSION).dll
+
+uninstall:
+	-rm -fv $(UNINSTALL_FILES)
+	-rd $(SYSTEM_INCLUDE_DIR_D)\adime
+	@echo All gone!
+
+
+
+# -------- Compile anything that can't be done in makefile.all. --------
+
+# this section is empty
+
+
+# -------- Generate automatic dependencies. --------
+
+DEPEND_PARAMS = $(GCC2MSVC) -MM -MG -I./include -DADIME_SCAN_DEPEND
+
+depend:
+	gcc $(DEPEND_PARAMS) src/*.c examples/*.c misc/makedoc/*.c misc/runner.c > _depend.tmp
+	sed -e "s/^[a-zA-Z0-9_\/]*\///" -e "s/[^ ]*version\.h//" -e "s/[^ ]*djgpp\.ver//" -e "s/[^ ]*allegro[^ ]*//g" -e'/^ *\\/d'  _depend.tmp > _depend2.tmp
+	sed -e "s/^\([a-zA-Z0-9_]*\)\.o:/obj\/msvc\/adime\/\1\.obj:/" _depend2.tmp > obj/msvc/adime/makefile.dep
+	sed -e "s/^\([a-zA-Z0-9_]*\)\.o:/obj\/msvc\/adimd\/\1\.obj:/" _depend2.tmp > obj/msvc/adimd/makefile.dep
+	sed -e "s/^\([a-zA-Z0-9_]*\)\.o:/obj\/msvc\/adime_s\/\1\.obj:/" _depend2.tmp > obj/msvc/adime_s/makefile.dep
+	sed -e "s/^\([a-zA-Z0-9_]*\)\.o:/obj\/msvc\/adimd_s\/\1\.obj:/" _depend2.tmp > obj/msvc/adimd_s/makefile.dep
+	rm _depend.tmp _depend2.tmp

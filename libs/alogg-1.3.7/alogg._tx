@@ -1,0 +1,816 @@
+@#
+@# This is the source for the alogg library docs, in a weird custom format.
+@# Read makedoc.c from Allegro for a description of what is going on...
+@#
+@# If you want to put everything in one big HTML file rather than splitting
+@# it into sections, remove this 'multiplefiles' statement:
+@#
+@#multiplefiles
+@#
+@locale=latin1
+@h=<html><head><title>#</title></head><body>
+@f1=<p><hr><p><a href="
+@f2=">Back to Contents</a><p></body></html>
+@rtfh=alogg - an Ogg/Vorbis addon library for Allegro
+@manh="version 1.3.7" "alogg" "alogg manual"
+@mans=#include <alogg/alogg.h>
+@$\input texinfo
+@$@setfilename alogg.inf
+@$@settitle alogg Manual
+@$@setchapternewpage odd
+@$@paragraphindent 0
+@$@setchapternewpage off
+@# This should remain commented at the moment (dvi output) @$@finalout
+@$
+@$@ifinfo
+@$@direntry
+@$* alogg: (alogg). The alogg Ogg/Vorbis addon library for Allegro.
+@$@end direntry
+@$This is the Info version of the alogg manual
+@$
+@$By Vincent Penquerc'h
+@$@end ifinfo
+@$
+@$@node Top, , (dir), (dir)
+@<html>
+@<head>
+@<title>alogg - an Ogg/Vorbis addon library for Allegro</title></head>
+@<body>
+@titlepage
+@<pre>
+@!indent
+		alogg - an Ogg/Vorbis addon library for Allegro
+
+				 version 1.3.7
+
+@indent
+@</pre>
+
+
+alogg is a library which makes it easier to use Ogg/Vorbis streams with
+Allegro. It offers facilities to decode, stream, and encode Ogg/Vorbis
+streams with thread support and experimental URL streaming, and integrates
+those facilities with Allegro's datafile and sample loading routines.
+
+alogg's homepage can be found at <link>http://lyrian.obnix.com/alogg/</a>
+
+
+alogg is Copyright 2002, 2003 Vincent Penquerc'h and is distributed under
+the terms of a modified Lesser General Public License (LGPL). See file
+lgpl.txt in the archive for more information about the LGPL.
+The examples are under a BSD like license, as libvorbvis' examples, and
+the grabber plugin is giftware, as it is an adaptation of Allegro's
+SAMPLE plugin.
+See the LICENSE file in the archive for more information on alogg's license.
+
+
+
+#include &ltstd_disclaimer.h&gt
+<i>
+   "I do not accept responsibility for any effects, adverse or otherwise, 
+    that this code may have on you, your computer, your sanity, your dog, 
+    and anything else that you can think of. Use it at your own risk."
+</i>
+@!titlepage
+
+
+@!text
+@heading
+Contents
+
+@contents
+
+
+
+@text
+
+@heading
+An overview of Ogg/Vorbis
+
+Ogg/Vorbis is an audio encoding format (Vorbis) using a particular bistream
+format (Ogg). Its specification is in the public domain, and it features
+similar properties to MPEG layer 3 audio format. Ogg/Vorbis supports fixed
+and variable bitrate encoding.
+
+Ogg/Vorbis was designed by the Xiphophorus company:
+<link>http://www.xiph.org/</a>
+
+Tremor is a fixed point implementation of the Ogg/Vorbis decoder from the
+Xiphophorus company.
+
+
+@heading
+Building alogg
+
+
+alogg requires the following:
+
+  libogg-1.0rc3       (or newer, available at <link>http://www.vorbis.com/</a>)
+  libvorbis-1.0rc3    (or newer, available at <link>http://www.vorbis.com/</a>)
+  allegro-4.0.0       (or newer, available at <link>http://alleg.sf.net/</a>)
+
+To compile with Tremor, a fixed point implementation of the Ogg/Vorbis
+decoder, you also a copy of the Tremor library. Tremor can be found at
+<link>http://www.xiph.org/</a>.
+
+To compile with URL support, you also need libcurl 7.10 or newer. libcurl
+is a library for transferring data specified with URL syntax, available at
+<link>http://curl.haxx.se</a>.
+Note that URL streaming is experimental is not ready for production use yet.
+In particular, I have not yet tried to stream off an Icecast server.
+
+To compile with threaded streaming support, you also need pthreads. pthreads
+is the most widely used library for thread support, and is supplied with
+most operating systems. You can even get a version of pthreads for MS-DOS
+and MS-Windows. For the latter, it can be found somewhere at
+<link>http://www.redhat.com</a>.
+
+Integration with Allegro's load_sample requires Allegro 4.1.1.
+If you have an older version of Allegro and want to be able to use
+load_sample to load Ogg/Vorbis streams, you can patch Allegro this way:
+
+<pre>
+cd /home/user/allegro # or wherever you put Allegro
+patch -p1 &lt /home/user/alogg-1.3.7/sample.diff # or wherever you put alogg
+</pre>
+
+If you want to add Ogg/Vorbis support to the grabber and dat utilities,
+you have to copy the datogg.* files into the tools/plugins directory in
+your Allegro tree, and recompile Allegro. You must have already installed
+alogg itself prior to doing that, since grabber and dat will try to find
+it to compile.
+You also have to link against the Ogg/Vorbis libraries in order for the
+grabber to link. If you use Unix, DJGPP or Mingw32, the supplied linker
+scripts will do this for you automatically, as they have been copied to
+the plugins directory (the linker scripts are named datogg.sc*). If you use
+another platform, or want to use Tremor, you will have to apply a patch to
+Allegro's makefile. If you want to use libvorbis, use libs.diff; if you want
+to use Tremor, use tremor.diff. The datogg grabber plugin needs to be told
+that Tremor is to be used instead of libvorbis, and Allegro has no support
+for plugin specific compile time scripts, so this must be done by hand.
+You can apply the patch to the Allegro distribution like this:
+
+<pre>
+cd /home/user/allegro # or wherever you put Allegro
+patch -p0 &lt /home/user/alogg-1.3.7/libs.diff # or wherever you put alogg
+</pre>
+
+or, if using Tremor:
+
+<pre>
+cd /home/user/allegro # or wherever you put Allegro
+patch -p0 &lt /home/user/alogg-1.3.7/tremor.diff # or wherever you put alogg
+</pre>
+
+If you do not have patch, then your mileage may vary. You might have to
+modify a project file, depending on how your compiler does this.
+
+
+
+alogg is written in C, and should be compilable with any C compiler that
+can build Allegro. It was written using GCC 2.95 on Linux, and has been
+reported to build on DOS/DJGPP and Win32/Mingw32.
+If you are using GCC and GNU make, then building is a very simple matter:
+<pre>
+make
+</pre>
+You may also want to install the library:
+<pre>
+make install
+</pre>
+or, if you want to install it somewhere else than /usr/local:
+<pre>
+make install PREFIX=/home/user/alogg
+</pre>
+
+Note that if you specify flags when building alogg, you should specify the
+exact same flags when installing it. For instance, if you build alogg using:
+<pre>
+make FOO=1 BAR=1
+</pre>
+then you should install it using:
+<pre>
+make install FOO=1 BAR=1
+</pre>
+
+
+You can build alogg as a shared library too:
+<pre>
+make SHARED=1
+</pre>
+To install, you must specify this flag too:
+<pre>
+make install SHARED=1
+</pre>
+
+To build with the Tremor fixed point implementation of the Ogg/Vorbis
+decoder, you have to specify this when building alogg:
+<pre>
+make TREMOR=1
+</pre>
+Note that since Tremor is only a decoder, neither the encoding part
+of alogg nor alogg_encode will be compiled in.
+
+To build in the URL streaming support, you need to specify it when building
+alogg:
+<pre>
+make CURL=1
+</pre>
+
+To build in the threaded streaming support, you also need to specify it
+when building:
+<pre>
+make PTHREAD=1
+</pre>
+
+You can of course mix these, so to build alogg as a shared library with
+Tremor, URL streaming, and pthreads support:
+<pre>
+make SHARED=1 TREMOR=1 CURL=1 PTHREAD=1
+</pre>
+
+Note that when passing such parameters to make, you should be consistent
+when issuing other make commands. For instance, if you build the library
+with Tremor support (make TREMOR=1), then you should specify it again
+when installing (make install TREMOR=1), or cleaning (make clean TREMOR=1).
+
+
+A separate part of alogg is datogg, a plugin for Allegro's grabber utility.
+It allows one to create Ogg/Vorbis stream objects. Since the grabber only
+recognizes plugins at compile time, you will have, after having compiled
+and installed alogg, to copy the files datogg.* in the plugins directory,
+located in tools/plugins where you have put your Allegro tree, or symlink
+them.
+Then, go to the main Allegro directory, and type:
+<pre>
+make depend
+make
+</pre>
+The first command will make Allegro notice a new plugin was added,
+and the second will recompile it with support for datogg. See above for
+instructions on how to link the Ogg/Vorbis libraries to the grabber
+if your platform can't use the supplied linker scripts.
+
+If you use Tremor and you have followed the steps to patch Allegro's
+makefile detailed above, the grabber should have been built with Tremor.
+
+When this is done, the grabber (don't forget to install it first, or
+you'll likely be running an old version) will be able to create and
+load Ogg/Vorbis streams, which you can then use in your programs.
+
+
+
+@heading
+Building alogg with and without Tremor support at the same time
+
+Two versions of alogg can now be installed at the same time: with and
+without Tremor support. This is useful when you want to be able to
+build different programs that want to link against either the standard
+Vorbis library or the Tremor fixed point library.
+
+When you have installed both versions of alogg, the alogg-config script
+doesn't know which library you want to use when you invoke it, so it
+will default to the last one you installed. You can override this by
+supplying either --with-tremor or --without-tremor as first argument,
+to specify which library to use. Note that such arguments only affect
+any subsequent parameters, so make sure to add either --with-tremor or
+--without-tremor before other parameters such as --libs or --cflags.
+
+If you installed only one version, whether with or without Tremor support,
+then you do not need to supply any of those two parameters, they are
+only here to allow you to choose between the two installed versions of
+the alogg library.
+
+Note that if you're building a program that needs to encode Ogg/Vorbis
+streams, you can't use the Tremor version, as Tremor does not implement
+encoding of Ogg/Vorbis streams.
+
+
+
+@heading
+Using alogg
+
+Using alogg is very simple: you need only include the file:
+<pre>
+#include &ltalogg/alogg.h&gt
+</pre>
+
+If you want to add advanced features, such as URL support or thread
+support, you will have to include the appropriate header as well:
+<pre>
+#include &ltalogg/aloggpth.h&gt
+#include &ltalogg/aloggurl.h&gt
+</pre>
+
+To help using alogg in your program, you can use the alogg-config script.
+The two most useful options are --cflags, which prints on stderr the
+compile flags necessary to compile with alogg, and --libs, which prints
+on stderr the link time flags necessary to link against alogg:
+<pre>
+gcc -c alogg_user.c `alogg-config --cflags`
+gcc -o alogg_user alogg_user.o `alogg-config --libs`
+</pre>
+Note that the --cflags and --libs options will pull in the appropriate
+options for the libraries alogg depends on, that is Allegro and Ogg/Vorbis.
+Allegro is dealt with using its own allegro-config, but Ogg/Vorbis is
+expected to live in a standard directory (that is, already in a path which
+can be reached by the compiler/linker).
+
+If you have compiled Allegro several times with different options (eg,
+both static and shared libraries), or if you're encountering problems at
+link time relating to alogg and/or Allegro, you should tell alogg-config
+to not supply the Allegro libraries and call allegro-config yourself with
+the parameters you want, eg:
+
+<pre>
+gcc -o alogg_user alogg_user.o `alogg-config --libs-alogg-only --libs-oggvorbis` `allegro-config --libs shared`
+</pre>
+
+This will allow finer control over what version of Allegro is used.
+You may also use alogg-config's --static and --shared options (note that
+they only apply to other options following them).
+
+If you have compiled alogg to use Tremor, libcurl or pthreads, the
+alogg-config script will automatically supply the right compilation and
+link flags to compile programs with the right libraries.
+
+Note that the only change in alogg's API when using Tremor instead of
+libvorbis is that the encoding routines will not be compiled in, since
+Tremor contains only the decoder part of libvorbis.
+
+If you are not using a Unix like operating system, then you probably won't
+be able to run the alogg-config script. In this case, you will have to
+supply the library directly to your build commands. To use alogg without
+Tremor support, link against libalogg.a. To use alogg with Tremor support,
+link against libaloggt.a. Note that the order in which you supply the
+libraries is important: the alogg library must come before the Allegro
+library (as a rule, libraries which use other libraries must come before
+the libraries they use).
+
+
+
+@heading
+Library basics
+
+Following are some macros useful for allowing building with different
+versions of alogg. For instance, earlier versions didn't have the
+ability to create a SAMPLE structure from a loaded DATAFILE object.
+Testing these macros with cpp directives can allow you to selectively
+compile in or out different bodies of code depending on the version
+of alogg available.
+
+<b>ALOGG_MAJOR</b>
+   This is the major number of alogg's version. It is the x in x.y.z.
+
+<b>ALOGG_MINOR</b>
+   This is the minor number of alogg's version. It is the y in x.y.z.
+
+<b>ALOGG_PATCH</b>
+   This is the patch number of alogg's version. It is the z in x.y.z.
+
+<b>ALOGG_MAKE_VERSION</b>
+   This helper macro allows one to build a version number in the format
+   of ALOGG_VERSION from the major, minor and patch numbers, ready to be
+   tested against ALOGG_VERSION.
+
+<b>ALOGG_VERSION</b>
+   This is the patch number of alogg's version. It is a decimal number
+   made up of the three version number components presented above.
+   It is equal to ALOGG_VERSION * 10000 + ALOGG_MINOR * 100 + ALOGG_PATCH,
+   which makes it easy to test if alogg x.y.z or newer is available with
+   a simple comparison.
+
+<b>ALOGG_ID</b>
+   This text string identifies alogg and its version in a suitable form
+   for displaying to the user.
+
+<b>ALOGG_USE_TREMOR</b>
+   This macro is defined if alogg is built with the Tremor fixed point
+   implementation of the Ogg/Vorbis decoder.
+   This macro is not defined in the header file, but is supplied at compile
+   time by the alogg-config script. If you don't use alogg-config, you will
+   have to set if by hand. Any program can use ALOGG_USE_TREMOR to compile
+   different code depending on whether alogg uses Tremor or not.
+
+<b>ALOGG_USE_CURL</b>
+   This macro is defined if alogg is built with URL streaming support supplied
+   by libcurl.
+   This macro is not defined in the header file, but is supplied at compile
+   time by the alogg-config script. If you don't use alogg-config, you will
+   have to set if by hand. Any program can use ALOGG_USE_CURL to compile
+   different code depending on whether alogg uses libcurl or not.
+
+<b>ALOGG_USE_PTHREAD</b>
+   This macro is defined if alogg is built with pthreads support.
+   This macro is not defined in the header file, but is supplied at compile
+   time by the alogg-config script. If you don't use alogg-config, you will
+   have to set if by hand. Any program can use ALOGG_USE_PTHREAD to compile
+   different code depending on whether alogg uses the pthreads library or not.
+
+@@int @alogg_error_code;
+   This variable is updated when an error related to Ogg/Vorbis occurs.
+   Since errors unrelated to Ogg/Vorbis do not affect this variable,
+   you should zero it before any call to alogg if you want to be able
+   to meaningfully determine whether an error occured in Ogg/Vorbis or
+   otherwise (eg I/O, memory shortage, etc).
+
+@@void @alogg_init();
+@xref alogg_exit,datogg_init
+   Initialises the alogg integration with Allegro. Calling this will enable
+   Allegro to load and save Ogg/Vorbis streams using load_sample and
+   save_sample. It does not need to be called for the rest of alogg to
+   work properly, but it is good practice to call it in case future versions
+   need some setup to work properly.
+
+@@void @alogg_exit();
+@xref alogg_init
+   This function cleans up what alogg_init did. This doesn't do anything at
+   the moment and is mainly included so that your programs will work with
+   future versions of alogg if they need special initialization and cleanup,
+   so it is good practice to call it when you're done using alogg.
+
+
+
+@heading
+Integration between alogg and Allegro
+
+@@void @datogg_init();
+@xref alogg_init
+   Initialises the datafile object support for Ogg/Vorbis streams. You should
+   not normally have to call this directly, as the datogg plugin will call
+   it automatically (if you have installed the plugin properly as indicated
+   in the 'Building alogg' section).
+
+@@SAMPLE *@alogg_load_ogg(const char *filename);
+@xref alogg_save_ogg
+   Loads an Ogg/Vorbis stream into memory as a SAMPLE structure, suitable
+   to be played and used as other SAMPLEs. Since it returns a pointer to
+   a SAMPLE, this SAMPLE should be destroyed with Allegro's destroy_sample.
+   This function is called by Allegro when load_sample is called with a
+   filename bearing a ".ogg" extension.
+   alogg_load_ogg uses Allegro's PACKFILE system, so the filename can
+   represent a normal file, but can also represent an object in a PACKFILE,
+   like "foo.dat#an_ogg_stream".
+
+@@int @alogg_save_ogg_param(const char *filename,SAMPLE *sample,float quality,size_t ncomments,char **comments);
+@xref alogg_save_ogg
+   Saves a SAMPLE as an Ogg/Vorbis encoded stream using the given quality,
+   ranging from 0.0 (poor) to 1.0 (high).
+   Note that this routine is not available if alogg was compiled with Tremor.
+
+@@int @alogg_save_ogg(const char *filename,SAMPLE *sample);
+@xref alogg_load_ogg,alogg_save_ogg_param, alogg_start_encoding
+   Saves a SAMPLE as an Ogg/Vorbis encoded stream. A default quality of
+   0.5 is used. To save a stream using another quality setting or with
+   comments, use alogg_save_ogg_param. This function is just a wrapper to
+   alogg_save_ogg_param.
+   This function is called by Allegro when save_sample is called with a
+   filename bearing a ".ogg" extension.
+   Note that this routine is not available if alogg was compiled with Tremor.
+
+@@SAMPLE *@alogg_create_sample(DATAFILE *dat);
+   Creates a SAMPLE structure and initializes it with the sample data
+   decoded from the given datafile object, which should be an Ogg/Vorbis
+   stream. The datogg grabber plugin should be used to handle Ogg/Vorbis
+   streams in datafiles.
+   This structure should be destroyed with Allegro's destroy_sample.
+
+
+@heading
+Streaming
+
+Note that streaming uses Allegro's AUDIOSTREAM facilities, which means once
+a stream is being played, the usual routines that apply on AUDIOSTREAM can
+be used. Just get a pointer to the AUDIOSTREAM (alogg_get_audio_stream),
+and call the Allegro routine (eg voice_set_volume).
+
+Note that if you use threaded streaming, you have to lock the relevant thread
+before using the stream in any way.
+
+alogg supports streaming directly from a URL if it was compiled with libcurl
+support. Note that this is experimental code and is likely to have flaws
+and quirks. Most notably, playback will suffer lags if the connection is
+not very fast.
+
+Chaining is supported, with the caveat that chained streams must use the
+same format (eg bit depth, frequency, etc). This should be true for most
+streams, as servers usually resample their input to offer a constant format.
+
+@@alogg_stream *@alogg_start_streaming(const char *filename,size_t block_size);
+@xref alogg_start_streaming_datafile,alogg_start_streaming_url,alogg_start_streaming_callbacks
+@xref alogg_update_streaming, alogg_stop_streaming, alogg_get_vorbis_file
+   Opens an Ogg/Vorbis stream and prepares it for streaming. The returned
+   alogg_stream structure must be freed with alogg_stop_streaming.
+   alogg_start_streaming uses Allegro's PACKFILE system, so the filename can
+   represent a normal file, but can also represent an object in a PACKFILE,
+   like "foo.dat#an_ogg_stream".
+   This function is a wrapper around alogg_start_streaming_callbacks.
+
+@@alogg_stream *@alogg_start_streaming_datafile(const DATAFILE *dat,size_t block_size);
+@xref alogg_start_streaming,alogg_start_streaming_callbacks
+@xref alogg_update_streaming, alogg_stop_streaming
+   Starts streaming from an already loaded datafile object, which should
+   be an Ogg/Vorbis stream.
+   This function is a wrapper around alogg_start_streaming_callbacks.
+
+@@alogg_stream *@alogg_start_streaming_url(const char *url,int (*configurator)(void*),size_t block_size);
+@xref alogg_start_streaming,alogg_start_streaming_callbacks
+@xref alogg_update_streaming, alogg_stop_streaming
+   Starts streaming from the specified URL using libcurl.
+   The network capabilities are those of libcurl. In particular, it is possible
+   to configure a connection using the configurator routine, which is called
+   before attempting to connect. This routine should return 0 to continue, and
+   non zero to abort streaming. If NULL is passed, the default configuration
+   will be used. The parameter passed to the configuration routine is a CURL*
+   which represents the libcurl connection, and on which you can repeatedly
+   call curl_easy_setopt to configure the connection as needed. Refer to
+   libcurl's documentation for more details.
+   This function is a wrapper around alogg_start_streaming_callbacks.
+   Note that URL streaming is experimental is not ready for production use yet.
+
+@@alogg_stream *@alogg_start_streaming_callbacks(void *datasource,struct ov_callbacks *callbacks,size_t block_size);
+@xref alogg_start_streaming,alogg_start_streaming_datafile,alogg_start_streaming_url
+@xref alogg_update_streaming, alogg_stop_streaming
+   Starts streaming using the supplied callbacks. Callbacks should be in
+   the same format and should behave as libvorbisfile expects. Use this
+   function if you want to stream from a source which is not a file nor
+   a datafile object.
+
+@@int @alogg_update_streaming(alogg_stream *stream);
+@xref alogg_start_streaming, alogg_stop_streaming
+   This function should be called at regular intervals when streaming. It
+   will stream and decode Ogg/Vorbis data as needed to feed sound data to
+   Allegro's audio stream subsystem. Failure to call this function often
+   enough will result in garbage being played.
+
+@@int @alogg_stop_streaming(alogg_stream *stream);
+@xref alogg_start_streaming
+   This function stops streaming and frees all resources allocated by
+   alogg_start_streaming.
+   The alogg_stream structure is deallocated and should not be used
+   anymore.
+
+@@int @alogg_read_stream_data(alogg_stream *stream,void *buffer,size_t size);
+@xref alogg_update_streaming, alogg_get_audio_stream
+   This function reads more data from the given stream. It is meant to
+   be used in conjunction with alogg_get_audio_stream to process the
+   streamed data before playing it. If you don't need to process the
+   data, you should use the higher level alogg_update_streaming.
+
+@@AUDIOSTREAM @alogg_get_audio_stream(alogg_stream *stream);
+@xref alogg_update_streaming, alogg_read_stream_data
+   Returns the underlying Allegro AUDIOSTREAM structure for the given
+   stream. This can be useful if you want to process the stream, to
+   add filtering effects to it, or anything else, in conjunction with
+   alogg_read_stream_data. If alogg_update_streaming meets your needs,
+   you probably don't need this function.
+
+@@OggVorbis_File @alogg_get_vorbis_file(alogg_stream *stream);
+@xref alogg_start_streaming
+   Returns the underlying Ogg/Vorbis file structure for the given stream.
+   This can be used to gather useful information on the stream being played
+   and/or call various Ogg/Vorbis API routines. Note that this structure
+   should be kept constant, as modifying it would likely interfere with
+   streaming. It is not made const because the Ogg/Vorbis API does not
+   use flag constant parameters as const.
+
+
+
+@heading
+Encoding
+
+Note that the encoding related routines are not included when alogg is built
+using the Tremor fixed point implementation of the Ogg/Vorbis decoder.
+
+Also note that the encoding routines will use a random serial number. Since
+alogg itself does not seed the random number generator since this could get
+in the way of your program, you will have to do this yourself if you want to.
+
+@@alogg_encoding_data *@alogg_start_encoding(size_t channels,size_t freq,float quality,size_t ncomments,char **comments,void (*write)(void*,size_t,unsigned long),unsigned long write_data);
+@xref alogg_update_encoding, alogg_stop_encoding
+   Initiates encoding of a sample. Actual sample data must be supplied using
+   alogg_update_encoding.
+   This function uses the supplied routine to perform the actual output of
+   stream data. This function expects a pointer to the encoded data, its
+   size, and a parameter which is passed from alogg_start_encoding. It is
+   compatible with Allegro's pack_fwrite, so you could do:
+<pre>
+   PACKFILE *f=pack_fopen("output.ogg",F_WRITE);
+   alogg_start_encoding(2,44100,0.8f,0,NULL,&pack_write,f);
+</pre>
+   This makes it easy to encode stream data and output it in whatever way
+   is appropriate for your program.
+   Note that it is valid for write to be NULL, in which case no output will
+   be made.
+   Comments can be added to the output stream. While comments can have any
+   format, it is recommented that they follow the Vorbis standard format,
+   which is similar to a Unix environment variable. Note that comments are
+   encoded as UTF-8, so non ASCII characters can safely be used.
+
+@@int @alogg_update_encoding(alogg_encoding_data *data,void *buffer,size_t num_samples,size_t channels,size_t bits);
+@xref alogg_start_encoding, alogg_stop_encoding
+   Supplies data to be encoded. The stream data will be written using the
+   callback supplied to alogg_start_encoding.
+   The supplied data must be in the same frequency as given to
+   alogg_start_encoding.
+
+@@int @alogg_stop_encoding(alogg_encoding_data *data);
+@xref alogg_start_encoding
+   Stops encoding and releases all resources allocated by alogg_start_encoding.
+   The alogg_encoding_data structure is deallocated and should not be used
+   anymore.
+
+
+
+@heading
+Thread support
+
+alogg can create threads to manage a stream, so you don't have to poll an
+alogg_stream regularly, as this is handled directly by the thread.
+Note that if you use this capability, you must ensure that only one thread
+is accessing the alogg_thread and its associated stream at any one time.
+For this, alogg supplies thread locking capabilities.
+
+@@alogg_thread *@alogg_create_thread(alogg_stream *stream);
+@xref alogg_destroy_thread, alogg_stop_thread
+   This function creates a new thread to handle the given stream.
+   This stream will be polled at regular intervals by the thread, thus
+   alleviating the need for the main program to poll it.
+   The user can check if the thread is still running, and stop it at
+   any time.
+   When the stream finished, the thread will automatically be stopped,
+   but not destroyed, so the user can still use it (at least to get
+   information about whether it has stopped or not). The thread controls
+   streaming, so when a thread stops, it stops streaming too, so you
+   should not call alogg_stop_streaming.
+
+@@void @alogg_destroy_thread(alogg_thread *thread);
+@xref alogg_create_thread, alogg_is_thread_alive, alogg_stop_thread
+   This function frees any resources associated with the given thread.
+   This should be called only when the thread is not running any more
+   (that is, alogg_is_thread_alive returns false, either because the
+   controlled stream has ended, or alogg_stop_thread was called and
+   the thread stopped itself as a result). Calling alogg_destroy_thread
+   when the thread is still running is likely to cause a crash.
+
+@@int @alogg_is_thread_alive(alogg_thread *thread);
+@xref alogg_stop_thread
+   This function checks whether a thread is still running. A thread should
+   not be destroyed until alogg_is_thread_alive returns false. If you want
+   to stop a running thread, you should stop it using alogg_stop_thread,
+   then only destroy it when alogg_is_thread_alive returns false.
+
+@@void @alogg_stop_thread(alogg_thread *thread);
+@xref alogg_is_thread_alive, alogg_destroy_thread
+   This function requests a thread to stop itself.
+   Note that a thread may not stop as soon as alogg_stop_thread is called,
+   so you should not call alogg_destroy_thread just after alogg_stop_thread,
+   but wait until alogg_is_thread_alive returns false.
+
+@@int @alogg_lock_thread(alogg_thread *thread);
+@xref alogg_unlock_thread, alogg_try_lock_thread
+   This function locks access to the thread, blocking until the access is
+   possible. A thread should be locked every time you need to access its
+   internals or the internals of its controlled stream, to avoid more than
+   one stream accessing or modifying the thread or its controlled stream
+   at the same time.
+
+@@int @alogg_try_lock_thread(alogg_thread *thread);
+@xref alogg_lock_thread, alogg_unlock_thread
+   This function checks if the thread is already locked, and locks it if
+   it is not. If it is locked already, it will return without locking it.
+   This function is useful in cases where you want to access the thread's
+   internals, but do not want to be blocked.
+
+@@int @alogg_unlock_thread(alogg_tharead *thread);
+@xref alogg_lock_thread, alogg_try_lock_thread
+   This function removes a previously acquired lock the given thread.
+   It should only be called when a lock was actually actually on the
+   thread.
+
+@@alogg_stream *@alogg_get_thread_stream(alogg_thread *thread);
+@xref alogg_create_thread
+   This function retrieves the stream associated with a thread (eg, the one
+   which was passed to alogg_create_thread).
+   If the thread has finished, this function returns NULL, so be prepared
+   for it.
+
+
+
+@heading
+the datogg grabber plugin
+
+alogg supplies a plugin for Allegro's grabber datafile utility, which allows
+one to use Ogg/Vorbis streams transparently with Allegro's datafiles.
+datogg can import Ogg/Vorbis streams, but also create them from the audio file
+formats already recognized by Allegro (eg, WAV, VOC).
+
+When importing an Ogg/Vorbis stream from another format, datogg lets you
+select which quality should be used for the encoding. A global quality
+setting is available from the File->Ogg/Vorbis import settings dialog.
+This global setting is used for every subsequent encoding, so you'll have
+to modify it every time you want to endode a stream with a different
+quality. Usually, you'll want to tweak this setting once and for all to
+match the quality you want, and leave it untouched. All encodings will
+then use this same quality setting. Remember that Ogg/Vorbis is a lossy
+audio compression format, so converting an audio sample to Ogg/Vorbis and
+back won't give you the exact same data.
+
+You can also convert existing sample objects to Ogg/Vorbis. Such conversion
+can be applied to any object of type SAMP in a datafile. This command is
+available from the Object->Encode to Ogg/Vorbis menu. All selected objects
+will be considered, but non SAMP objects will be ignored. This conversion
+also uses the global encoding quality setting.
+
+After loading a datafile containing Ogg/Vorbis streams, you have two options:
+you can either use the stream as is, or you can convert it into an Allegro
+SAMPLE structure (in which case you can use it as if it was a standard
+Allegro sample).
+
+In the first case, the data part of the datafile object points directly to
+the Ogg/Vorbis encoded data, which you can use directly (for instance, by
+streaming it from memory). The following code does just that:
+
+<pre>
+DATAFILE *music;
+struct alogg_stream *stream;
+music=load_datafile_object("streams.dat","IntroductionMusic");
+stream=alogg_start_streaming_datafile(music,4096);
+</pre>
+
+In the second case, you have an extra step to do, to convert the encoded
+Ogg/Vorbis data into a SAMPLE structure, which you can then use with all
+of Allegro's sound routines. The following code shows how to
+do it:
+
+<pre>
+DATAFILE *music;
+SAMPLE *sample;
+music=load_datafile_object("streams.dat","IntroductionMusic");
+sample=alogg_create_sample(music);
+play_sample(sample,255,127,1000,1);
+</pre>
+
+
+
+@heading
+Examples
+
+The alogg distribution comes with five examples to show you how to use alogg.
+
+alogg_play plays a single Ogg/Vorbis file. It can be either a normal file
+(eg foo.ogg) or an Allegro datafile object (eg foo.dat#bar). Playing involves
+loading the whole file in memory, so it best suited for small files.
+
+alogg_stream streams, that is, it only reads data as it is needed to be
+played. This method can play arbitrarily long streams, as the data does not
+need to be loaded in memory in entirety before being played.
+alogg_stream also shows how to use the lower level alogg_read_stream_data
+function to gain access to the decoded data, and apply transformations to
+it. As an example, alogg_stream adds a simple echo effect to the stream.
+As alogg_play, alogg_stream can stream either from a normal file or from
+an Allegro datafile object, but it can also stream off an URL is alogg was
+compiled with libcurl support.
+
+alogg_encode is a very simple encoder. Encoding is done with variable
+bit rate only, with a selectable quality. The input file must be an audio
+format known to Allegro. The default output file will have the same name with
+the extension replaced with ".ogg", but can be changed from the command line.
+Note that alogg_encode will not be available is alogg is built with the
+Tremor fixed point implementation of the Ogg/Vorbis decoder.
+
+alogg_dat shows how to use Ogg/Vorbis streams placed in datafiles using
+the datogg grabber plugin. Such streams can be decoded in a SAMPLE
+structure (this makes Ogg/Vorbis a nifty way to encode your normal samples
+to save space in your distribution), or streamed off memory.
+To select which Ogg/Vorbis stream to use, specify the name of the datafile
+to use, then the name of the object in this datafile. Do not use the usual
+Allegro compound notation foo.dat#name.
+
+alogg_thread shows the use of thread streaming. Taking a number of streams
+as arguments, alogg_thread creates a new thread for each one of them, and
+plays them in parallel. Hitting digit keys (1, 2...) will stop and restart
+the associated thread, showing how to manage thread lifetime.
+
+If compiling with Tremor support, the examples are named aloggt_* instead
+of alogg_*. Both versions of the examples will be installed if you install
+both versions of alogg.
+
+
+
+@!html
+@!text
+@$@ifinfo
+@headingnocontent
+Index
+
+@index
+@$@end ifinfo
+
+@$@contents
+@$@bye
+
+@html
+@text
+@</body>
+@</html>

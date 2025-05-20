@@ -1,5 +1,4 @@
 #define NO_MIDI
-#define USE_ALOGG
 #include "config.h"
 #include "mmam.h"
 #ifdef USE_DUMB

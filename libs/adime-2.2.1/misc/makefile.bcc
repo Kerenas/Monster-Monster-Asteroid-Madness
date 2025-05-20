@@ -1,0 +1,479 @@
+#     _      _ _
+#    /_\  __| (_)_ __  ___
+#   / _ \/ _` | | '  \/ -_)
+#  /_/ \_\__,_|_|_|_|_\___|
+#
+#  makefile.bcc:
+#  Makefile for the Adime library with Borland C++Builder.
+#  Should not be used directly!
+#
+#  By Eric Botcazou.
+#
+#  See readme.txt for more information about Adime.
+#
+#  See makefile.all for a list of the available targets.
+#
+#
+#  You need to set BCC32DIR to the directory where Borland C++Builder is
+#  located.
+#
+#  This build uses djgpp for calculating source dependencies.
+#
+#  The "depend" target uses sed.
+
+
+
+# -------- define some variables that the primary makefile will use --------
+
+PLATFORM = BCC32
+# build only the statically linked library
+ifndef STATICLINK
+  STATICLINK = 1
+endif
+
+EXE_SUFFIX = .exe
+OBJ_SUFFIX = .obj
+LIB_SUFFIX = .lib
+HTML_SUFFIX = .html
+INFO_SUFFIX = .info
+TEXI_SUFFIX = .texi
+
+_TX_HTML_FLAG = -html
+_TX_TEXI_FLAG = -texi
+
+ifndef OBJ_ROOT_DIR
+  OBJ_ROOT_DIR = obj
+  OBJ_ROOT_DIR_D = obj
+endif
+OBJ_PLATFORM_ROOT_DIR = $(OBJ_ROOT_DIR)/bcc32
+OBJ_PLATFORM_ROOT_DIR_D = $(OBJ_ROOT_DIR_D)\bcc32
+
+ifndef LIB_ROOT_DIR
+  LIB_ROOT_DIR = lib
+  LIB_ROOT_DIR_D = lib
+endif
+LIB_DIR = $(LIB_ROOT_DIR)/bcc32
+LIB_DIR_D = $(LIB_ROOT_DIR)\bcc32
+
+
+ifdef STATICLINK
+
+  # link as a static library
+  OBJ_DIR = $(OBJ_PLATFORM_ROOT_DIR)/$(PACKAGE5)_s
+  OBJ_DIR_D = $(OBJ_PLATFORM_ROOT_DIR_D)\$(PACKAGE5)_s
+  IMPLIB_BASENAME = $(PACKAGE5)_s$(LIB_SUFFIX)
+  IMPLIB_NAME = $(LIB_DIR)/$(IMPLIB_BASENAME)
+  LIB_NAME = $(IMPLIB_NAME)
+
+else
+
+  # link as a DLL
+  OBJ_DIR = $(OBJ_PLATFORM_ROOT_DIR)/$(PACKAGE5)
+  OBJ_DIR_D = $(OBJ_PLATFORM_ROOT_DIR_D)\$(PACKAGE5)
+  DLL_BASENAME = $(PACKAGE4)$(LIB_VERSION).dll
+  DLL_NAME = $(LIB_DIR)/$(DLL_BASENAME)
+  IMPLIB_BASENAME = $(PACKAGE4)$(LIB_SUFFIX)
+  IMPLIB_NAME = $(LIB_DIR)/$(IMPLIB_BASENAME)
+  LIB_NAME = $(DLL_NAME) $(IMPLIB_NAME)
+  EXPDEF_NAME = $(LIB_DIR)/adime.def
+  IMPDEF_NAME = $(LIB_DIR)/impadime.def
+
+endif
+
+
+
+# -------- Check that environment path variables are set. --------
+
+ifeq ($(OS),Windows_NT)
+  WINSYSDIR = $(SYSTEMROOT)
+  WINSUBDIR = system32
+else
+  WINSYSDIR = $(windir)
+  WINSUBDIR = system
+endif
+
+ifeq ($(WINSYSDIR),)
+  ifndef CROSSCOMPILE
+    define BADWIN
+
+      ERROR:
+      Your SYSTEMROOT or windir environment variable is not set!
+
+    endef
+    $(error $(BADWIN))
+  endif
+endif
+WINDIR_U = $(subst \,/,$(WINSYSDIR)/$(WINSUBDIR))
+WINDIR_D = $(subst /,\,$(WINSYSDIR)/$(WINSUBDIR))
+
+ifndef BCC32DIR
+  ifndef CROSSCOMPILE
+    define BADBCC32
+
+      ERROR:
+      BCC32DIR variable not set!
+      You must set the environment variable BCC32DIR to point to your
+      Borland C++Builder directory, e.g. "c:\programs\borland\bcc55". Run
+        make BCC32DIR=c:\programs\borland\bcc55
+      (or whatever the location of Borland C++Builder is).
+      See also docs/build/bcc32.txt
+
+    endef
+    $(error $(BADBCC32))
+  endif
+endif
+BCC32DIR_U = $(subst \,/,$(BCC32DIR))
+BCC32DIR_D = $(subst /,\,$(BCC32DIR))
+
+
+SYSTEM_INCLUDE_DIR = $(BCC32DIR_U)/include
+SYSTEM_INCLUDE_DIR_D = $(BCC32DIR_D)\include
+SYSTEM_LIB_DIR = $(BCC32DIR_U)/lib
+SYSTEM_LIB_DIR_D = $(BCC32DIR_D)\lib
+
+
+
+# -------- Find Allegro and makedoc. --------
+
+ifndef NEED_ALLEGRO
+  ifdef NEED_MAKEDOC
+    ifeq ($(wildcard $(MAKEDOC_SOURCE)),)
+      NEED_ALLEGRO = 1
+    endif
+  endif
+endif
+
+ifdef NEED_ALLEGRO
+  ifndef ALLEGRO
+    define BADALLEGRO
+
+      ERROR:
+      Could not find Allegro!
+      Is your ALLEGRO environment variable set correctly? It should
+      point to the place where Allegro lives, e.g. c:\allegro. Run
+        make ALLEGRO=c:\allegro
+      (or whatever the location of Allegro is).
+      See also readme.txt
+
+    endef
+    $(error $(BADALLEGRO))
+  endif
+  ALLEGRODIR_U = $(subst \,/,$(ALLEGRO))
+endif
+
+
+ifdef NEED_MAKEDOC
+  include misc/makefile.doc
+endif
+
+
+
+# -------- decide what compiler options to use --------
+
+ifdef WARNMODE
+  WFLAGS = -w
+else
+  WFLAGS =
+endif
+
+ifdef DEBUGMODE
+  # -------- debugging build --------
+  # avoid too long command line when doing both staticlink and debugging
+  ifndef STATICLINK
+     CFLAGS = -DDEBUGMODE=$(DEBUGMODE)
+  endif 
+  CFLAGS += $(WFLAGS) -Od -q -R -v
+  SFLAGS = -DDEBUGMODE=$(DEBUGMODE)
+  LFLAGS = /q /Gn /v
+  ifdef STATICLINK_ALLEGRO
+    LIB_FLAGS = alld_s.lib
+  else
+    LIB_FLAGS = alld.lib
+  endif
+else
+ifdef PROFILEMODE
+  # -------- profiling build --------
+  CFLAGS = $(WFLAGS) -O2 -OS -q -R -v
+  SFLAGS = $(WFLAGS)
+  LFLAGS = /q /Gn /v
+  ifdef STATICLINK_ALLEGRO
+    LIB_FLAGS = allp_s.lib
+  else
+    LIB_FLAGS = allp.lib
+  endif
+else
+# -------- optimised build --------
+  CFLAGS = $(WFLAGS) -O2 -OS -q
+  SFLAGS = $(WFLAGS)
+  LFLAGS = /x /q /Gn
+  DELETE_TDS_FILES = 1
+  ifdef STATICLINK_ALLEGRO
+    LIB_FLAGS = alleg_s.lib
+  else
+    LIB_FLAGS = alleg.lib
+  endif
+endif
+endif
+
+ifdef ADIME_DEVELOPING
+  CFLAGS += -D_ADIME_DEVELOPING=1
+endif
+ifdef ADIME_FORTIFY
+  CFLAGS += -D_ADIME_FORTIFY=1 -DFORTIFY
+endif
+
+CFLAGS_NO_OPTIMIZE = $(WFLAGS) -Od -q
+
+COMPILE_FLAGS = $(subst src/,-DADIME_SRC ,$(findstring src/, $<))$(CFLAGS)
+COMPILE_FLAGS_NO_OPTIMIZE = $(subst src/,-DADIME_SRC ,$(findstring src/, $<))$(CFLAGS_NO_OPTIMIZE)
+
+ifdef STATICLINK
+  # avoid too long command line when doing both staticlink and debugging
+  ifdef DEBUGMODE
+    COMPILE_FLAGS += -DADIME_BCCX
+  else
+    COMPILE_FLAGS += -DADIME_STATICLINK
+  endif
+endif
+
+LIB_FLAGS += cw32.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib ole32.lib \
+ dinput.lib ddraw.lib winmm.lib dsound.lib
+
+
+
+# -------- List platform specific objects and programs. --------
+
+VPATH +=
+
+OBJ_LIST = $(COMMON_OBJS)
+
+# Insert names of targets to build platform specific programs here.
+PROGRAMS =
+# Insert targets to build platform specific programs here.
+# myprogram: path/myprogram$(EXE_SUFFIX)
+
+
+
+# -------- Define how to compile. --------
+
+GCC2BCC = -D__BORLANDC__ -UDJGPP
+
+COMPILE_C_TO_OBJ_DEPS =
+define COMPILE_C_TO_OBJ
+bcc32 $(COMPILE_FLAGS) -w-eff -w-pia -W -I. -I./include -c -o$(subst /,\,$@) $(subst /,\,$<)
+endef
+define COMPILE_C_TO_OBJ_NO_OPTIMIZE
+bcc32 $(COMPILE_FLAGS_NO_OPTIMIZE) -W -I. -I./include -c -o$(subst /,\,$@) $(subst /,\,$<)
+endef
+
+COMPILE_S_TO_OBJ_DEPS =
+define COMPILE_S_TO_OBJ
+endef
+
+define MAKE_LIB_RSP
+	$(foreach lib, $(LIB_FLAGS), echo $(subst /,\\,$(lib)) + >> lib.rsp
+	)
+endef
+
+lib.rsp:
+	echo making lib.rsp
+	$(MAKE_LIB_RSP)
+
+LINK_EXE_DEPS = lib.rsp
+define DO_LINK_EXE
+   ilink32 $(LFLAGS) /aa /Tpe c0w32 $(subst /,\,$<),$(subst /,\,$@),,$(subst /,\,$(IMPLIB_NAME) @lib.rsp)
+endef
+ifdef DELETE_TDS_FILES
+  define LINK_EXE
+    $(DO_LINK_EXE)
+    @del $(subst .exe,.tds,$(subst /,\,$@))
+  endef
+else
+  LINK_EXE = $(DO_LINK_EXE)
+endif
+
+LINK_EXE_ALL_DEPS = lib.rsp
+define DO_LINK_EXE_ALL
+  $(foreach objfile, $(filter %$(OBJ_SUFFIX),$^), echo $(subst /,\\,$(objfile)) + >> obj.rsp
+  )
+  ilink32 $(LFLAGS) /aa /Tpe c0w32 @obj.rsp,$(subst /,\,$@),,$(subst /,\,$(IMPLIB_NAME) @lib.rsp)
+  del obj.rsp
+endef
+ifdef DELETE_TDS_FILES
+  define LINK_EXE_ALL
+    $(DO_LINK_EXE_ALL)
+    @del $(subst .exe,.tds,$(subst /,\,$@))
+  endef
+else
+  LINK_EXE_ALL = $(DO_LINK_EXE_ALL)
+endif
+
+LINK_EXE_ALL_NOLIB_DEPS = lib.rsp
+define DO_LINK_EXE_ALL_NOLIB
+  $(foreach objfile, $(filter %$(OBJ_SUFFIX),$^), echo $(subst /,\\,$(objfile)) + >> obj.rsp
+  )
+  ilink32 $(LFLAGS) /aa /Tpe c0w32 @obj.rsp,$(subst /,\,$@),,$(subst /,\,@lib.rsp)
+  del obj.rsp
+endef
+ifdef DELETE_TDS_FILES
+  define LINK_EXE_ALL_NOLIB
+    $(DO_LINK_EXE_ALL_NOLIB)
+    @del $(subst .exe,.tds,$(subst /,\,$@))
+  endef
+else
+  LINK_EXE_ALL_NOLIB= $(DO_LINK_EXE_ALL_NOLIB)
+endif
+
+LINK_EXE_CONSOLE_DEPS = $(IMPLIB_NAME) lib.rsp
+define DO_LINK_EXE_CONSOLE
+  ilink32 $(LFLAGS) /ap /Tpe c0x32 $(subst /,\,$<),$(subst /,\,$@),,$(subst /,\,$(IMPLIB_NAME) @lib.rsp)
+endef
+ifdef DELETE_TDS_FILES
+  define LINK_EXE_CONSOLE
+    $(DO_LINK_EXE_CONSOLE)
+    @del $(subst .exe,.tds,$(subst /,\,$@))
+  endef
+else
+  LINK_EXE_CONSOLE = $(DO_LINK_EXE_CONSOLE)
+endif
+
+LINK_EXE_CONSOLE_ALL_NOLIB_DEPS = lib.rsp
+define DO_LINK_EXE_CONSOLE_ALL_NOLIB
+  $(foreach objfile, $(filter %$(OBJ_SUFFIX),$^), echo $(subst /,\\,$(objfile)) + >> obj.rsp
+  )
+  ilink32 $(LFLAGS) /ap /Tpe c0x32 @obj.rsp,$(subst /,\,$@),,$(subst /,\,@lib.rsp)
+  del obj.rsp
+endef
+ifdef DELETE_TDS_FILES
+  define LINK_EXE_CONSOLE_ALL_NOLIB
+    $(DO_LINK_EXE_CONSOLE_ALL_NOLIB)
+    @del $(subst .exe,.tds,$(subst /,\,$@))
+  endef
+else
+  LINK_EXE_CONSOLE_ALL_NOLIB = $(DO_LINK_EXE_CONSOLE_ALL_NOLIB)
+endif
+
+
+ifdef STATICLINK
+  # link as a static library
+
+  LINK_LIB_DEPS =
+  define LINK_LIB
+  $(foreach objfile, $(LIB_OBJS), tlib /P32 $(subst /,\,$(LIB_NAME) + $(objfile))
+)
+  @del $(subst /,\,$(subst .lib,.BAK,$(LIB_NAME)))
+endef
+
+else
+  # link as a DLL
+
+  LINK_LIB_DEPS = lib.rsp
+  define DO_LINK_LIB
+    -del libobj.rsp
+    $(foreach libobjfile, $(LIB_OBJS), echo $(subst /,\\,$(libobjfile)) + >> libobj.rsp
+    )
+    ilink32 $(LFLAGS) /Tpd @libobj.rsp,$(subst /,\,$(DLL_NAME)),,@lib.rsp,$(subst /,\,$(EXPDEF_NAME))
+    del libobj.rsp
+    echo LIBRARY     $(DLL_BASENAME) > _impadime.def
+    copy _impadime.def + $(subst /,\,$(IMPDEF_NAME)) _impdim2.def
+    implib $(subst /,\,$(IMPLIB_NAME)) _impdim2.def
+    del _impadime.def
+    del _impdim2.def
+  endef
+  ifdef DELETE_TDS_FILES
+    define LINK_LIB
+      $(DO_LINK_LIB)
+      @del $(subst .dll,.tds,$(subst /,\,$@))
+    endef
+  else
+    LINK_LIB = $(DO_LINK_LIB)
+  endif
+
+endif # ifdef STATICLINK
+
+
+
+# -------- Rules for installing and removing the library files. --------
+
+ifneq ($(wildcard $(DJDIR)/bin/cp.exe),)
+  HAVE_CP = 1
+endif
+
+ifndef STATICLINK
+$(WINDIR_U)/$(DLL_BASENAME): $(DLL_NAME)
+ifdef HAVE_CP
+	$(DJDIR)/bin/cp $(subst \,/,$< $@)
+else
+	copy $(subst /,\,$< $@)
+endif
+endif
+
+$(SYSTEM_LIB_DIR)/$(IMPLIB_BASENAME): $(IMPLIB_NAME)
+ifdef HAVE_CP
+	$(DJDIR)/bin/cp $(subst \,/,$< $@)
+else
+	copy $(subst /,\,$< $@)
+endif
+
+$(SYSTEM_INCLUDE_DIR)/adime.h: include/adime.h
+ifdef HAVE_CP
+	$(DJDIR)/bin/cp $(subst \,/,$< $@)
+else
+	copy $(subst /,\,$< $@)
+endif
+
+$(SYSTEM_INCLUDE_DIR)/adime:
+	md $(subst /,\,$@)
+
+$(SYSTEM_INCLUDE_DIR)/adime/%.h: include/adime/%.h include/adime
+ifdef HAVE_CP
+	$(DJDIR)/bin/cp $(subst \,/,$< $@)
+else
+	copy $(subst /,\,$< $@)
+endif
+
+
+INSTALL_HEADERS = $(addprefix $(BCC32DIR_U)/,$(wildcard include/adime/*.h))
+
+INSTALL_FILES = $(SYSTEM_LIB_DIR)/$(IMPLIB_BASENAME) \
+ $(SYSTEM_INCLUDE_DIR)/adime.h \
+ $(SYSTEM_INCLUDE_DIR)/adime \
+ $(INSTALL_HEADERS)
+
+ifndef STATICLINK
+  INSTALL_FILES += $(WINDIR_U)/$(DLL_BASENAME)
+endif
+
+install: $(INSTALL_FILES)
+	@echo The $(DESCRIPTION) BCC32 library has been installed.
+
+UNINSTALL_FILES = \
+ $(SYSTEM_LIB_DIR)/adime.lib $(SYSTEM_LIB_DIR)/adime_s.lib \
+ $(SYSTEM_LIB_DIR)/adimd.lib $(SYSTEM_LIB_DIR)/adimd_s.lib \
+ $(SYSTEM_INCLUDE_DIR)/adime.h $(SYSTEM_INCLUDE_DIR)/adime/*.h \
+ $(WINDIR_U)/adime$(LIB_VERSION).dll $(WINDIR_U)/adid$(LIB_VERSION).dll
+
+uninstall:
+	-rm -fv $(UNINSTALL_FILES)
+	-rd $(SYSTEM_INCLUDE_DIR_D)\adime
+	@echo All gone!
+
+
+
+# -------- Compile anything that can't be done in makefile.all. --------
+
+# this section is empty
+
+
+# -------- Generate automatic dependencies. --------
+
+DEPEND_PARAMS = $(GCC2BCC) -MM -MG -I. -I./include -DADIME_SCAN_DEPEND
+
+depend:
+	gcc $(DEPEND_PARAMS) src/*.c examples/*.c misc/makedoc/*.c > _depend.tmp
+	sed -e 's/^[a-zA-Z0-9_\/]*\///' -e 's/[^ ]*version\.h//' -e 's/[^ ]*djgpp\.ver//' -e 's/[^ ]*allegro[^ ]*//g' -e'/^ *\\/d'  _depend.tmp > _depend2.tmp
+	sed -e "s/^\([a-zA-Z0-9_]*\)\.o:/obj\/bcc32\/adime\/\1\.obj:/" _depend2.tmp > obj/bcc32/adime/makefile.dep
+	sed -e "s/^\([a-zA-Z0-9_]*\)\.o:/obj\/bcc32\/adimd\/\1\.obj:/" _depend2.tmp > obj/bcc32/adimd/makefile.dep
+	sed -e "s/^\([a-zA-Z0-9_]*\)\.o:/obj\/bcc32\/adime_s\/\1\.obj:/" _depend2.tmp > obj/bcc32/adime_s/makefile.dep
+	sed -e "s/^\([a-zA-Z0-9_]*\)\.o:/obj\/bcc32\/adimd_s\/\1\.obj:/" _depend2.tmp > obj/bcc32/adimd_s/makefile.dep
+	rm _depend.tmp _depend2.tmp
