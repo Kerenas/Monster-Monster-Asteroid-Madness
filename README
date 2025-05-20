@@ -2,9 +2,10 @@ To Compile mmam you need:
 allegro 4.3.1 http://alleg.sf.net/
 jpalleg(use argument WANT_JPGALLEG=1 before your cmake command)
 alogg(included in allegro files, use argument WANT_LOGG=1 before your cmake command)
-DUMB http://dumb.sf.net (playing in game music)
 adime (allegro dialogues made easy, available on sourceforge)
-alpng
+alloadpng - allegro png save/load wrapper library
+loadpng - Allegro Addon, see loadpng.txt for install hints / may have CMAKE flags
+DUMB http://dumb.sf.net (playing in game music)
 libogg
 libvorbis
 
@@ -19,13 +20,8 @@ Documentation on how to play is in the docs/html directory.
 
 
 Current to/do list:
-Convert Alogg mentions in code to Logg OR find a way to properly make all Logg files named as Alogg files
-remove sound dependence
-make the --without-alogg and --without-dumb arguments for./config function properly
-update some code(relies on a 20 year old compiler)
-
+Fix alogg Codepaths to work with modern alogg library in Allegro 4.4.x
 Actually get the game running
-
 
 If people want to just backseat me, let me know and I'll pop open a twitch stream
 

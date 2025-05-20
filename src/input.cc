@@ -1,6 +1,6 @@
 #include "mmam.h"
 #include "gamelog.h"
-
+#include <ctype.h>
 
 int strincmp(char *s1, char *s2, int n) {
 	while (--n >= 0) {

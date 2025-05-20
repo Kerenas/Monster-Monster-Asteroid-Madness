@@ -164,7 +164,7 @@ AC_ARG_WITH(png,
 if test "$default_loadpng" != no; then
        AC_DEFINE(USE_PNG,,
        [Use loadpng/zlib/libpng instead of bitmaps for compresses sprites])
-       PNG_LIBS="-lldpng -lpng -lz"
+       PNG_LIBS="-lloadpng -lpng -lz"
 fi
 AC_SUBST(PNG_LIBS)
 
@@ -177,14 +177,14 @@ AC_ARG_WITH(fonts,
 	[AC_DEFINE(NO_FONTS,,[disables linking fonts into executable])],
 	[AC_SUBST(FONTS_DAT,[fonts.dat])
 	AC_SUBST(FONTS_O,[fonts.o])
-#	if  test -f "./src/fonts.o"  ; then
-#		echo "fonts.o already exists."
-#	else
-#		dat2s "./src/fonts.dat" XTRA_DIST = \
+	if  test -f "./src/fonts.o"  ; then
+		echo "fonts.o already exists."
+	else
+		dat2s "./src/fonts.dat" XTRA_DIST = \
 	fonts.dat gwthreat.rc gwthreatserv.rc
 -o "./src/fonts.s" -h "./src/fonts.h" -p font
-#		gcc -c ./src/fonts.s -o ./src/fonts.o -v
-#	fi
+		gcc -c ./src/fonts.s -o ./src/fonts.o -v
+	fi
 ])
 
 AC_ARG_WITH(trans,

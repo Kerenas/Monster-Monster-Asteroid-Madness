@@ -3,6 +3,7 @@
 #include "bubbles.h"
 #include "graphs.h"
 #include "namelist.h"
+#include <ctype.h>
 #ifdef USE_ALOGG 
 extern "C" {
 #include <alogg/aloggint.h>
