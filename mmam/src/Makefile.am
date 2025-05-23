@@ -37,14 +37,13 @@ EXTRA_DIST = fonts.dat mmam.rc  build_monstbase_h.sh  trader_strip.pl ecosys.pl 
 
 BUILT_SOURCES = fonts.dat fonts.h monstbase.h auto_monstbase.inc sprite_patch.h ecosys.cc
 
-CLEANFILES = fonts.s fonts.h mmam.res
+CLEANFILES = fonts.c fonts.h mmam.res
 
 fonts.h: fonts.o
 
 fonts.o: fonts.dat
-	dat2s fonts.dat -o fonts.s -h fonts.h -p font
-	$(AS) -c fonts.s -o fonts.o || gcc -c fonts.s -o fonts.o
-	@rm -f fonts.s || true
+	dat2c -o fonts.c -h fonts.h -p font -g fonts.dat
+	$(CC) -c fonts.c -o fonts.o || gcc -c fonts.c -o fonts.o
 
 testnames: rand.o namelist.cc namelist.h
 	g++ -DSTANDALONE -g -o testnames rand.o namelist.cc @ALLEG_LIBS@ @SYS_LIBS@

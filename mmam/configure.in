@@ -180,10 +180,8 @@ AC_ARG_WITH(fonts,
 	if  test -f "./src/fonts.o"  ; then
 		echo "fonts.o already exists."
 	else
-		dat2s "./src/fonts.dat" XTRA_DIST = \
-	fonts.dat gwthreat.rc gwthreatserv.rc
--o "./src/fonts.s" -h "./src/fonts.h" -p font
-		gcc -c ./src/fonts.s -o ./src/fonts.o -v
+		dat2c -o src/fonts.c -h src/fonts.h -p font -g src/fonts.dat
+		gcc -c src/fonts.c -o src/fonts.o -v
 	fi
 ])
 
