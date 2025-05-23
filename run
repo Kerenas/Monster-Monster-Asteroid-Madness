@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+cd "${0%/*}"
+
+[ -d home ] || mkdir home
+
+source ./env
+
+#	--user $(id -u):$(id -g) \
+#	--userns=keep-id \
+
+
+time ${DOCKER_EXEC} ${DOCKER_ARGS} run -it --privileged --rm \
+	--ipc=host \
+	--net=host \
+	--dns=1.1.1.1 \
+	--device=/dev/dri \
+  --device=/dev/input \
+  --device=/dev/snd \
+  --env XDG_RUNTIME_DIR \
+	--env WAYLAND_DISPLAY \
+  --volume=${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY} \
+  --env LC_ALL=en_US.UTF-8 \
+  --env LANG=en_US.UTF-8 \
+  --volume=/dev/shm:/dev/shm \
+	--volume=/etc/passwd:/etc/passwd:ro \
+ 	--volume=/etc/group:/etc/group:ro \
+  --group-add keep-groups \
+	--volume=/etc/machine-id:/etc/machine-id:ro \
+	--volume=/etc/hostname:/etc/hostname:ro \
+  --volume=/etc/localtime:/etc/localtime:ro \
+	--volume=/var/lib/dbus:/var/lib/dbus \
+	--volume=/var/run/dbus:/var/run/dbus \
+  --volume=$(pwd)/external:/build/external \
+  --volume=$(pwd)/script:/build/script \
+  --volume=$(pwd)/patch:/build/patch \
+  --volume=$(pwd)/env:/build/env \
+  --volume=$(pwd)/mmam:/build/src/mmam \
+  ${IMAGE}:${TAG} \
+  ${*:-bash}
