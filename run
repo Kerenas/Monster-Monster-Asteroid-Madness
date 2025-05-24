@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+cd "${0%/*}"
+
+[ -d output ] || mkdir output
+
+source ./env
+
+#	--user $(id -u):$(id -g) \
+#	--userns=keep-id \
+
+mkdir -p output
+
+time ${DOCKER_EXEC} ${DOCKER_ARGS} run -it --privileged --rm \
+	--ipc=host \
+	--net=host \
+	--dns=1.1.1.1 \
+  --env LC_ALL=en_US.UTF-8 \
+  --env LANG=en_US.UTF-8 \
+	--volume=/etc/passwd:/etc/passwd:ro \
+ 	--volume=/etc/group:/etc/group:ro \
+  --group-add keep-groups \
+	--volume=/etc/machine-id:/etc/machine-id:ro \
+	--volume=/etc/hostname:/etc/hostname:ro \
+  --volume=/etc/localtime:/etc/localtime:ro \
+  --volume=$(pwd)/external:/build/external \
+  --volume=$(pwd)/script:/build/script \
+  --volume=$(pwd)/patch:/build/patch \
+  --volume=$(pwd)/env:/build/env \
+  --volume=$(pwd)/mmam:/build/src/mmam \
+  --volume=$(pwd)/output:/build/output \
+  ${IMAGE}:${TAG} \
+  ${*:-bash}

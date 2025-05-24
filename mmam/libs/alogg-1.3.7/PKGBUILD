@@ -1,0 +1,32 @@
+# Maintainer: Jguer <pkgbuilds at jguer.space>
+pkgname=alogg
+pkgver=1.3.7
+pkgrel=1
+pkgdesc=""
+arch=('x86_64' 'pentium4')
+url="https://answers.launchpad.net/ubuntu/+source/alogg/1.3.7-1.1"
+license=('zlib')
+depends=(
+  'pacman>6.1'
+  'wget'
+  'allegro4'
+)
+makedepends=(
+  'allegro4'
+)
+source=("https://answers.launchpad.net/ubuntu/+archive/primary/+sourcefiles/alogg/1.3.7-1.1/alogg_1.3.7.orig.tar.gz")
+sha256sums=('9b856dd1e967d4cc975685ddb0cdc30c4af4ff048fa1025069b00881121dce21')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver.orig"
+# ./fix.sh unix
+  # Patch Makefile for unix
+ # sed -i '127s/^.*$/OFLAGS = -O2 -funroll-loops -ffast-math -fPIC/' misc/makefile.uni
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver.orig"
+  echo "package here"
+  make PREFIX="$pkgdir/usr" install
+}

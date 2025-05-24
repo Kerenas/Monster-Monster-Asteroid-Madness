@@ -1,0 +1,40 @@
+#     _      _ _
+#    /_\  __| (_)_ __  ___
+#   / _ \/ _` | | '  \/ -_)
+#  /_/ \_\__,_|_|_|_|_\___|
+#
+#  makefile.djx:
+#  Makefile for cross-compiling the Adime library to DJGPP.
+#
+#  See readme.txt for more information about Adime.
+#
+#
+# Neil Townsend provided this makefile for cross-compiling Allegro to djgpp,
+# based on the notes in Allegro's `readme.dj', and I stole it to Adime. I
+# haven't been able to test it but I see no reason why it should work
+# differently to Allegro.
+
+#
+# 1. Put here the path on which the compiler and other tools
+# for the target will be found with standard names (e.g. gcc,
+# not dos-gcc).
+#
+XC_PATH=/users/neil/bli/sun4-sunos/i386-pc-msdosdjgpp/bin
+
+#
+# 2. Put here the path for where things are to be installed.
+# You should have created the lib, info and include directories
+# in this directory.
+#
+INSTALL_BASE=/users/neil/bli/pc-dos
+
+all : main install
+
+main :
+	make CROSSCOMPILE="1" \
+		DJDIR="$(XC_PATH)" \
+		PATH="$(XC_PATH):$(PATH)" \
+		NATIVEPATH="$(PATH)"
+
+install :
+	make CROSSCOMPILE="1" DJDIR="$(INSTALL_BASE)" install

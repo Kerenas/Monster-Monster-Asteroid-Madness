@@ -1,0 +1,33 @@
+###### Raider Base III ######
+# author : Eric Killeen
+# date : 18Jan2005
+
+mon.new Raider Camp; ast.spawnmon
+mon.pushpos
+	*9 mon.new Raider; ast.addmonby
+	mon.new Raider Galtix Tower; mon.pos -280  -230; ast.addmonr;
+	mon.new Raider Galtix Tower; mon.pos  280   230; ast.addmonr;
+poppos
+*5 mon.new Raider Gun Tower; ast.spawnmon
+*4 mon.new Raider DG Tower; ast.spawnmon
+*3 mon.new Raider X-Cannon Tower; ast.spawnmon
+*16 mon.new Raidship; ast.spawnmon
+*12 mon.new Raider; ast.spawnmon
+*5 mon.new Raider Solar Array; ast.spawnmon
+mon.new Raider Fusion Plant; ast.spawnmon
+mon.pushpos
+	*6 mon.new Raider; ast.addmonby
+poppos
+
+
+# Raidship
+# Raider
+# Raider Gun Tower
+# Raider DG Tower
+# Raider X-Cannon Tower
+# Raider Galtix Tower
+# Raider Solar Array
+# Raider Fission Plant
+# Raider Fusion Plant
+
+

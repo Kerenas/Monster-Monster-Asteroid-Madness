@@ -1,0 +1,123 @@
+#!/bin/sh
+
+version=VERSION
+prefix=PREFIX
+tremor=TREMOR
+curl=CURL
+pthread=PTHREAD
+shared=SHARED
+major=MAJOR
+
+usage()
+{
+  cat << "  EOF"
+  alogg-config [--options]
+    --help                 Prints this help
+    --version              Prints installed alogg version
+    --cflags               Prints compiler flags to compile with alogg
+    --shared               Selects the shared version of alogg for subsequent libs
+    --static               Selects the static version of alogg for subsequent libs
+    --libs                 Prints linker options to link with alogg
+    --libs-alogg-only      Prints linker options to link with alogg,
+                            without its dependencies (Allegro, Ogg/Vorbis...)
+    --libs-oggvorbis       Prints linker options to link with the
+                            Ogg/Vorbis libraries alogg needs
+    --with-tremor          Force use of Tremor library
+    --without-tremor       Force use of standard Ogg/Vorbis library
+  EOF
+}
+
+generate_alogg_libname()
+{
+  suffix="$1"
+  if [ "$shared" == "1" ]
+  then
+    echo alogg"$suffix"-$major
+  else
+    echo alogg"$suffix"
+  fi
+}
+
+generate_allegro_libs()
+{
+  if [ "$shared" == "1" ]
+  then
+    allegro_config_options="--shared"
+  else
+    allegro_config_options="--static"
+  fi
+  allegro-config --libs $allegro_config_options
+}
+
+if [ $# == 0 ]
+then
+  usage
+  exit 1
+fi
+
+while [ $# -gt 0 ]
+do
+  case $1 in
+    --version)
+      echo ${version}
+    ;;
+    --cflags)
+      msg="-I${prefix}/include `allegro-config --cflags`"
+      if [ ! -z ${tremor} ]; then msg="${msg} -DALOGG_USE_TREMOR"; fi
+      if [ ! -z ${curl} ]; then msg="${msg} -DALOGG_USE_CURL"; fi
+      if [ ! -z ${pthread} ]; then msg="${msg} -DALOGG_USE_PTHREAD"; fi
+      echo ${msg}
+    ;;
+    --shared)
+      shared=1
+    ;;
+    --static)
+      shared=0
+    ;;
+    --libs)
+      if [ -z ${tremor} ]
+      then
+        msg="-L${prefix}/lib -l`generate_alogg_libname` `generate_allegro_libs`"
+        msg="${msg} -lvorbisfile -lvorbisenc -lvorbis -logg -lm"
+      else
+        msg="-L${prefix}/lib -l`generate_alogg_libname t` `generate_allegro_libs`"
+        msg="${msg} -lvorbisidec"
+      fi
+      if [ ! -z ${curl} ]; then msg="${msg} `curl-config --libs`"; fi
+      if [ ! -z ${curl} ]; then msg="${msg} -lpthread"; fi
+      echo ${msg}
+    ;;
+    --libs-alogg-only)
+      if [ -z ${tremor} ]
+      then
+        echo -L${prefix}/lib -l`generate_alogg_libname`
+      else
+        echo -L${prefix}/lib -l`generate_alogg_libname t`
+      fi
+    ;;
+    --libs-oggvorbis)
+      if [ -z ${tremor} ]
+      then
+        echo "-lvorbisfile -lvorbisenc -lvorbis -logg"
+      else
+        echo "-lvorbisidec"
+      fi
+    ;;
+    --with-tremor)
+      tremor=1
+    ;;
+    --without-tremor)
+      tremor=
+    ;;
+    --help)
+      usage
+    ;;
+    *)
+      usage
+      exit 1
+    ;;
+  esac
+  shift
+done
+
+exit 0

@@ -1,0 +1,16 @@
+- Find out what needs to be done in order to support different formats
+  like 8/16 bits, signed/unsigned, endianness differences, etc. Tested
+  on my machine (i686-pc-linux-gnu) but likely to fail on others. If you
+  find an Ogg/Vorbis file that doesn't work, I'd like to hear about it.
+  If the file is not too large (less than 200 KB), you can send it to
+  me via email, otherwise make it available on a web site/FTP site and
+  send me the URL where I can get it.
+
+- Maybe offer more control for the encoding. On the other hand, this
+  is supposed to be a simple and easy to use API, so if you want power,
+  you might as well use libvorbis directly...
+
+- Support different bistream formats in a single file
+
+- Test URL streaming in a real environment (not local)
+

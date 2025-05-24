@@ -1,0 +1,193 @@
+    _adime_clamp_calc
+    _adime_clamp_plain
+    _adime_count_buttonrow
+    _adime_count_chain
+    _adime_count_datafile
+    _adime_count_dialogf
+    _adime_count_pointer_and_return_1
+    _adime_count_pointer_and_return_2
+    _adime_count_vdialogf
+    _adime_count_vlist
+    _adime_count_void_and_return_1
+    _adime_count_void_and_return_2
+    _adime_create_bool
+    _adime_create_button
+    _adime_create_buttonrow
+    _adime_create_char
+    _adime_create_datafile
+    _adime_create_dialogfs
+    _adime_create_double
+    _adime_create_filename
+    _adime_create_float
+    _adime_create_greybool
+    _adime_create_int
+    _adime_create_line
+    _adime_create_list
+    _adime_create_nothing
+    _adime_create_pchar
+    _adime_create_pdouble
+    _adime_create_pfloat
+    _adime_create_pfloatingpoint
+    _adime_create_pint
+    _adime_create_pinteger
+    _adime_create_pshort
+    _adime_create_puchar
+    _adime_create_puint
+    _adime_create_pushort
+    _adime_create_short
+    _adime_create_string
+    _adime_create_uchar
+    _adime_create_uint
+    _adime_create_ushort
+    _adime_create_vlist
+    _adime_create_wdatafile
+    _adime_create_wlist
+    _adime_create_wvlist
+    _adime_destroy_buttonrow
+    _adime_destroy_calc
+    _adime_destroy_dialogfs
+    _adime_destroy_dp
+    _adime_destroy_filename
+    _adime_destroy_list_and_datafile
+    _adime_destroy_plain
+    _adime_destroy_vlist
+    _adime_destroy_wlist_and_wdatafile
+    _adime_destroy_wvlist
+    _adime_dialog DATA
+    _adime_dialogf_count_objects
+    _adime_dialogf_create_desc
+    _adime_dialogf_create_objects
+    _adime_dialogf_end
+    _adime_dialogf_final_pass DATA
+    _adime_dialogf_format_list DATA
+    _adime_dialogf_formats DATA
+    _adime_dialogf_pass_index DATA
+    _adime_dialogf_reset_dialog
+    _adime_dialogf_run
+    _adime_dialogf_start
+    _adime_dialogf_store_results
+    _adime_get_double_arg
+    _adime_get_int_arg
+    _adime_get_string_arg
+    _adime_get_strlist_arg
+    _adime_inited DATA
+    _adime_isnan
+    _adime_multiline_text_size
+    _adime_ok_cancel_button_callback
+    _adime_register_dialogf_format
+    _adime_reset_bool
+    _adime_reset_char
+    _adime_reset_datafile
+    _adime_reset_dialogfs
+    _adime_reset_double
+    _adime_reset_filename
+    _adime_reset_float
+    _adime_reset_greybool
+    _adime_reset_int
+    _adime_reset_lists
+    _adime_reset_short
+    _adime_reset_string
+    _adime_reset_uchar
+    _adime_reset_uint
+    _adime_reset_ushort
+    _adime_reset_wdatafile
+    _adime_reset_wlists
+    _adime_store_bool
+    _adime_store_char
+    _adime_store_datafile
+    _adime_store_dialogfs
+    _adime_store_double
+    _adime_store_filename
+    _adime_store_float
+    _adime_store_greybool
+    _adime_store_int
+    _adime_store_lists
+    _adime_store_pchar
+    _adime_store_pdouble
+    _adime_store_pfloat
+    _adime_store_pint
+    _adime_store_pshort
+    _adime_store_puchar
+    _adime_store_puint
+    _adime_store_pushort
+    _adime_store_short
+    _adime_store_string
+    _adime_store_uchar
+    _adime_store_uint
+    _adime_store_ushort
+    _adime_store_wdatafile
+    _adime_store_wlists
+    adime_background_rgb DATA
+    adime_bmp DATA
+    adime_border_rgb DATA
+    adime_button_font DATA
+    adime_button_rgb DATA
+    adime_callback DATA
+    adime_char_width
+    adime_clean_screen DATA
+    adime_d_button_proc
+    adime_d_calc_edit_result_proc
+    adime_d_check_proc
+    adime_d_double_calc_edit_proc
+    adime_d_edit_proc
+    adime_d_greyable_check_proc
+    adime_d_int_calc_edit_proc
+    adime_d_line_proc
+    adime_d_list_proc
+    adime_d_multiline_text_proc
+    adime_d_text_list_proc
+    adime_d_window_proc
+    adime_dark_shadow_rgb DATA
+    adime_dialogf
+    adime_disabled_text_rgb DATA
+    adime_do_dialog_find_focus_object
+    adime_double2string
+    adime_draw_empty_button
+    adime_draw_empty_button_frame
+    adime_draw_picture_button
+    adime_draw_picture_button_down
+    adime_draw_substr
+    adime_draw_text_button
+    adime_draw_text_button_down
+    adime_edit_field_rgb DATA
+    adime_error_text_rgb DATA
+    adime_evaluate
+    adime_exit
+    adime_file_select
+    adime_fill_textout
+    adime_font DATA
+    adime_highlight_rgb DATA
+    adime_init
+    adime_init_dialog_find_focus_object
+    adime_keyflag_to_pretty_name
+    adime_keyflag_to_short_name
+    adime_light_highlight_rgb DATA
+    adime_lowlevel_dialogf
+    adime_lowlevel_vdialogf
+    adime_scancode_to_pretty_name
+    adime_scancode_to_short_name
+    adime_shadow_rgb DATA
+    adime_short_name_to_keyflag
+    adime_short_name_to_scancode
+    adime_substr_width
+    adime_text_rgb DATA
+    adime_title_background_rgb DATA
+    adime_title_font DATA
+    adime_title_highlight_rgb DATA
+    adime_title_shadow_rgb DATA
+    adime_title_text_rgb DATA
+    adime_udouble2string
+    adime_uevaluate
+    adime_vdialogf
+    adime_window_between_button_spacing DATA
+    adime_window_border_thickness DATA
+    adime_window_button_h DATA
+    adime_window_button_spacing DATA
+    adime_window_button_w DATA
+    adime_window_description_spacing DATA
+    adime_window_line_spacing DATA
+    adime_window_title_border_thickness DATA
+    adime_window_title_internal_border_thickness DATA
+    adime_window_title_spacing DATA
+    adime_window_visible DATA
+    adime_yield DATA

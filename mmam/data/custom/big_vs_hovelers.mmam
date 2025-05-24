@@ -1,0 +1,13 @@
+###### Bigasaurus vs Hovelers ######
+# author : Eric Killeen
+# date : 17Nov2004
+
+
+mon.new Bigasaurus; ast.spawnmon
+mon.pushpos
+*8	mon.new Hoveler; ast.addmonby
+poppos
+
+*12	mon.new Green Crystals; ast.spawnmon
+
+ast.populate

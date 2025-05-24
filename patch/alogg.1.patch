@@ -1,0 +1,8 @@
+--- alogg-config.skel.orig	2025-05-23 11:57:35.429340023 -0400
++++ alogg-config.skel	2025-05-23 11:57:47.720830093 -0400
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ 
+ version=VERSION
+ prefix=PREFIX

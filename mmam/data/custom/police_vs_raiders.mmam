@@ -1,0 +1,8 @@
+###### Police vs Raider Base ######
+# author : Eric Killeen
+# date : 1Nov2004
+
+include raider_base2.mmam
+
+*4 mon.new Enforcer;  ast.spawnmon
+*8 mon.new Squadship;  ast.spawnmon

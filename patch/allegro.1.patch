@@ -1,0 +1,11 @@
+--- tools/dat2c.c.orig	2025-05-23 09:21:59.246809064 -0400
++++ tools/dat2c.c	2025-05-23 09:22:23.865177676 -0400
+@@ -1642,7 +1642,7 @@
+    char *prefixed_name = 0;
+ 
+    prefixed_name = malloc(5 +
+-      (dat2c->prefix ? (signed)strlen(dat2c->prefix) : 0) +
++      (dat2c->prefix ? (signed)strlen(dat2c->prefix) + 1 : 0) +
+       (dat2c->datafile_name ? (signed)strlen(dat2c->datafile_name) : 0));
+    if (!prefixed_name)
+       out_of_memory();

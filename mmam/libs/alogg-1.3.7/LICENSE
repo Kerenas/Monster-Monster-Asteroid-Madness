@@ -1,0 +1,97 @@
+The alogg distribution is, in an attempt to be confusing, licensed
+on the terms of three different licenses:
+
+- The core (alogg.h, alogg.c) is LGPL-like
+- The grabber plugin is giftware
+- The examples are BSD-like
+
+Here are the details:
+
+The core library (alogg.h, alogg.c) is licensed under the terms of
+a modified GNU Library (now known as Lesser) General Public License.
+Its goal is to allow anyone to use it freely in open source and closed
+soure programs alike while keeping the library free software and
+able to reincorporate enhancements that other may want to contribute
+back.
+Here is the legalese blurb:
+
+   The alogg library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The alogg library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the alogg Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.
+
+   As a special exception, if you link this library statically with a
+   program, you do not have to distribute the object files for this
+   program.
+   This exception does not however invalidate any other reasons why
+   you would have to distribute the object files for this program.
+
+
+
+The grabber plugin is very heavily based on the sample plugin from
+Allegro, so I adopted the same license as Allegro for this part.
+Here is, once again, the legalese blurb:
+
+   Allegro and the alogg grabber plugin are gift-ware. They were created by
+   a number of people working in cooperation, and are given to you freely as
+   a gift. You may use, modify, redistribute, and generally hack them about
+   in any way you like, and you do not have to give us anything in return.
+   However, if you like these products you are encouraged to thank us by
+   making a return gift to the Allegro/alogg community. This could be by
+   writing an add-on package, providing a useful bug report, making an
+   improvement to the library and/or the plugin, or perhaps just releasing
+   the sources of your program so that other people can learn from them.
+   If you redistribute parts of this code or make a game using it, it 
+   would be nice if you mentioned Allegro and alogg somewhere in the
+   credits, but you are not required to do this. We trust you not to abuse
+   our generosity.  
+
+
+Lastly, the examples are licensed under a BSD-like license, in an attempt
+to help people integrate alogg in their program more easily. This license
+is the same as the examples found in libvorbis' distribution. Last time
+you see a legalese blurb there:
+
+
+Copyright (c) 2001, Vincent Penquerc'h
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+- Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+- Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+- Neither the name of the Vincent Penquerc'h nor alogg nor Xiphophorus
+nor the names of their contributors may be used to endorse or promote
+products derived from this software without specific prior written
+permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+

@@ -1,0 +1,25 @@
+#! /usr/bin/perl
+use strict;
+open SI, "sprites.h" or die "cannot open input sprites.h";
+open NI, "sounds.h" or die "cannot open input sounds.h";
+open SO, ">../src/sprites.h" or die "cannot open output sprites.h";
+open NO, ">../src/sounds.h" or die "cannot open output sounds.h";
+my $lnn = 0;
+while (defined (my $ln = <SI>)) {
+	$ln =~ s/_JPG//;
+	$ln =~ s/_BMP//;
+	$ln =~ s/#define /#define SPR_/;
+	$lnn++ if ($ln =~ /^#/);
+	print SO $ln;
+}
+print SO "#define SPR_COUNT $lnn\n";
+print SO "#define NUM_SURFACES 10\n\n";
+$lnn = 0;
+while (defined (my $ln = <NI>)) {
+	$ln =~ s/_OGG//;
+	$lnn++ if ($ln =~ /^#/);
+	print NO $ln;
+}
+print NO "#define SND_COUNT $lnn\n";
+close NO; close SO; close NI; close SI;
+print "export done.\n";

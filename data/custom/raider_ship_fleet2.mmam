@@ -1,6 +1,0 @@
-###### Raid ship test zone II ######
-# author : Eric Killeen
-# date : 1Nov2004
-include raider_ship_fleet.mmam
-*40 mon.new Furbit; ast.addmon
-

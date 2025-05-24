@@ -1,0 +1,11 @@
+###### Orick Small Base ######
+# author : Eric Killeen
+# date : 18Jan2005
+
+mon.new Base Camp; ast.spawnmon
+*3  include orick_scout_party.mmam
+*20 mon.new Orick; ast.addmon
+*9  mon.new Molber; ast.spawnmon
+
+
+

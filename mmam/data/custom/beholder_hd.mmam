@@ -1,0 +1,7 @@
+###### HD Beholder World ######
+# author : Eric Killeen
+# date : 17Nov2004
+*7 mon.new Yazzert; ast.spawnmon
+*33 mon.new Vaerix; ast.spawnmon
+*20 mon.new Stalk Plant; ast.spawnmon
+

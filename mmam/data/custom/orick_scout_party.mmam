@@ -1,0 +1,10 @@
+###### Orick Scout Party ######
+# author : Eric Killeen
+# date : 18Jan2005
+
+mon.new Campfire; ast.spawnmon
+mon.pushpos
+	*5 mon.new Orick; ast.addmonby
+poppos
+
+

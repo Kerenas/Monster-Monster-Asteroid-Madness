@@ -1,0 +1,25 @@
+###### Raid ship test zone ######
+# author : Eric Killeen
+# date : 1Nov2004
+
+ast.jumpgate 1 279 1603
+ast.skin_num 2
+
+mon.new Raider Camp
+    mon.pos 910.829 766.225 1.570796 0.000000
+ast.addmon
+
+mon.pushpos
+	mon.new Raidship; ast.addmonby
+	mon.new Raidship; ast.addmonby
+	mon.new Raidship; ast.addmonby
+	mon.new Raidship; ast.addmonby
+	mon.new Raidship; ast.addmonby
+	mon.new Raidship; ast.addmonby
+	mon.new Raidship; ast.addmonby
+poppos
+
+
+
+mon.new Raidship; mon.clearweaps; mon.giveweap Morningstar; ast.spawnmon
+mon.new Raidship; mon.clearweaps; mon.giveweap Morningstar; ast.spawnmon

@@ -1,0 +1,107 @@
+.\" This -*- nroff -*- file has been generated from
+.\" DocBook SGML with docbook-to-man on Debian GNU/Linux.
+...\"
+...\"	transcript compatibility for postscript use.
+...\"
+...\"	synopsis:  .P! <file.ps>
+...\"
+.de P!
+\\&.
+.fl			\" force out current output buffer
+\\!%PB
+\\!/showpage{}def
+...\" the following is from Ken Flowers -- it prevents dictionary overflows
+\\!/tempdict 200 dict def tempdict begin
+.fl			\" prolog
+.sy cat \\$1\" bring in postscript file
+...\" the following line matches the tempdict above
+\\!end % tempdict %
+\\!PE
+\\!.
+.sp \\$2u	\" move below the image
+..
+.de pF
+.ie     \\*(f1 .ds f1 \\n(.f
+.el .ie \\*(f2 .ds f2 \\n(.f
+.el .ie \\*(f3 .ds f3 \\n(.f
+.el .ie \\*(f4 .ds f4 \\n(.f
+.el .tm ? font overflow
+.ft \\$1
+..
+.de fP
+.ie     !\\*(f4 \{\
+.	ft \\*(f4
+.	ds f4\"
+'	br \}
+.el .ie !\\*(f3 \{\
+.	ft \\*(f3
+.	ds f3\"
+'	br \}
+.el .ie !\\*(f2 \{\
+.	ft \\*(f2
+.	ds f2\"
+'	br \}
+.el .ie !\\*(f1 \{\
+.	ft \\*(f1
+.	ds f1\"
+'	br \}
+.el .tm ? font underflow
+..
+.ds f1\"
+.ds f2\"
+.ds f3\"
+.ds f4\"
+'\" t 
+.ta 8n 16n 24n 32n 40n 48n 56n 64n 72n  
+.TH "ALOGG" "1" 
+.SH "NAME" 
+alogg-config \(em script  to  get  information  about the 
+installed version of alogg 
+.SH "SYNOPSIS" 
+.PP 
+\fBalogg-config\fP [\fBoptions\fP]  
+.SH "DESCRIPTION" 
+.PP 
+\fBalogg-config\fP is a tool that  is  used   
+to  configure  to determine  the  compiler  and  linker flags that should be 
+used to compile and link programs  that  use  the  alogg 
+library. 
+.SH "EXAMPLE" 
+.PP 
+gcc -o mygame mygame.o  
+`\fBalogg-config\fP --libs`  
+.PP 
+\fBalogg-config\fP will insert arguments needed to  link  into 
+the command line. 
+.SH "OPTIONS" 
+.PP 
+\fBalogg-config\fP accepts the following options: 
+.IP "\fB--help\fP         " 10 
+Show summary of options. 
+.IP "\fB--version\fP         " 10 
+Prints installed alogg version 
+.IP "\fB--cflags\fP         " 10 
+Prints compiler flags to compile with alogg 
+.IP "\fB--shared\fP         " 10 
+Selects shared version for subsequent Allegro/alogg libraries
+.IP "\fB--static\fP         " 10 
+Selects static version for subsequent Allegro/alogg libraries
+.IP "\fB--libs\fP         " 10 
+Prints linker options to link with alogg 
+.IP "\fB--libs-alogg-only\fP         " 10 
+Prints linker options to link with alogg, 
+without its dependencies (Allegro, Ogg/Vorbis...) 
+.IP "\fB--libs-oggvorbis\fP         " 10 
+Prints linker options to link with the Ogg/Vorbis libraries
+.IP "\fB--with-tremor\fP         " 10 
+Force use of Tremor library
+.IP "\fB--without-tremor\fP         " 10 
+Force use of standard Ogg/Vorbis library
+.SH "SEE ALSO" 
+.PP 
+the alogg info entry 
+.SH "AUTHOR" 
+.PP 
+This manual page was written by Alexandre Pineau <alexandre.pineau@free.fr> for 
+the \fBDebian\fP system. 
+...\" created by instant / docbook-to-man, Sat 18 Jan 2003, 12:23 

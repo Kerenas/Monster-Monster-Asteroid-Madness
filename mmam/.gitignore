@@ -1,0 +1,57 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+#Specific Compiled App Binary
+src/mmam
+
+#Generated files
+autom4te.cache
+aclocal.m4
+Makefile.in
+Makefile
+configure
+config.log
+config.status
+mmam-pricesheet.html
+src/.deps
+src/Makefile
+src/Makefile.in
+src/config.h
+src/config.h.in
+src/fonts.c
+src/fonts.h
+src/fonts.o
+src/levels.dat
+src/stamp-h1
+src/ecosys.cc
+
