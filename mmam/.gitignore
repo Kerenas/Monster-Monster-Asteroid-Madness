@@ -33,3 +33,23 @@
 
 #Specific Compiled App Binary
 src/mmam
+
+#Generated files
+autom4te.cache
+aclocal.m4
+Makefile.in
+Makefile
+configure
+config.log
+config.status
+mmam-pricesheet.html
+src/.deps
+src/Makefile
+src/Makefile.in
+src/config.h
+src/config.h.in
+src/fonts.c
+src/fonts.h
+src/fonts.o
+src/levels.dat
+src/stamp-h1

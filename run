@@ -2,7 +2,7 @@
 
 cd "${0%/*}"
 
-[ -d home ] || mkdir home
+[ -d output ] || mkdir output
 
 source ./env
 

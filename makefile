@@ -8,8 +8,6 @@ PUID := $(shell id -u)
 PGID := $(shell id -g)
 PWD := $(shell pwd)
 
-
-
 all: docker
 
 clean:
