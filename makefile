@@ -22,12 +22,15 @@ superclean: clean
 docker: Dockerfile
 	echo ${TAGGED_IMAGE}
 	echo ---
+	mkdir -p $(PWD)/output
 	podman build -t ${TAGGED_IMAGE} -t ${IMAGE}:latest \
 		--build-arg LC_ALL="en_US.UTF-8" \
 		-v $(PWD)/external:/build/external \
 		-v $(PWD)/patch:/build/patch \
 		-v $(PWD)/script:/build/script \
 		-v $(PWD)/env:/build/env \
+		-v $(PWD)/mmam:/build/src/mmam \
+		-v $(PWD)/output:/build/output \
 		.
 	rm -f ${TARBALL}
 	podman save -o ${TARBALL} ${TAGGED_IMAGE}

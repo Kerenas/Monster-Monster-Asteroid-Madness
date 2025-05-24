@@ -34,3 +34,6 @@ RUN \
 
 # Set working directory
 WORKDIR /build/src/mmam
+
+RUN \
+  ./build.sh

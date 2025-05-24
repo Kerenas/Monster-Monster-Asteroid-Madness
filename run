@@ -9,6 +9,7 @@ source ./env
 #	--user $(id -u):$(id -g) \
 #	--userns=keep-id \
 
+mkdir -p output
 
 time ${DOCKER_EXEC} ${DOCKER_ARGS} run -it --privileged --rm \
 	--ipc=host \
@@ -27,5 +28,6 @@ time ${DOCKER_EXEC} ${DOCKER_ARGS} run -it --privileged --rm \
   --volume=$(pwd)/patch:/build/patch \
   --volume=$(pwd)/env:/build/env \
   --volume=$(pwd)/mmam:/build/src/mmam \
+  --volume=$(pwd)/output:/build/output \
   ${IMAGE}:${TAG} \
   ${*:-bash}
