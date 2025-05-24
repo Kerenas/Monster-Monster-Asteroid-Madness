@@ -53,3 +53,5 @@ src/fonts.h
 src/fonts.o
 src/levels.dat
 src/stamp-h1
+src/ecosys.cc
+
